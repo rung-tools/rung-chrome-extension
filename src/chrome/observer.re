@@ -6,7 +6,10 @@ type chrome('a) = {.
         "setBadgeText": [@bs.meth] {."text": string} => unit
     },
     "alarms": {.
-        "create": [@bs.meth] {."periodInMinutes": int} => unit
+        "create": [@bs.meth] {."periodInMinutes": int} => unit,
+        "onAlarm": {.
+            "addListener": [@bs.meth] (unit => unit) => unit
+        }
     },
     "storage": {.
         "sync": {.
@@ -15,27 +18,40 @@ type chrome('a) = {.
     }
 };
 
-type storage = {.
-    "unread": int
+type notification = {.
+  "readDate": option(string)
 };
 
-[@bs.val] external chrome : chrome(storage) = "chrome";
+[@bs.val] external chrome : chrome({."unread": int}) = "chrome";
+
+[@bs.val] external parseNotifications : string => Js.Array.t(notification) = "JSON.parse";
 
 let updateNotifications = () => Js.Promise.(
     fetchWithInit("https://app.rung.com.br/api/notifications", RequestInit.make(~credentials=Include, ()))
     |> then_((response) => {
         Response.ok(response)
-            ? Response.json(response)
+            ? Response.text(response)
             : Js.Exn.raiseError("")
     })
-    |> then_((json) => Js.log(json) |> resolve)
-    |> catch((_error) => chrome##browserAction##setBadgeText({"text": ":D"}) |> resolve));
+    |> then_((text) =>
+        parseNotifications(text)
+        |> Js.Array.filter((notification) =>
+            switch (notification##readDate) {
+            | Some(_date) => false
+            | None => true
+            })
+        |> (notifications) => {"unread": Array.length(notifications)}
+        |> (content) => chrome##storage##sync##set(content)
+        |> resolve
+    )
+    |> catch((_error) => chrome##browserAction##setBadgeText({"text": "..."}) |> resolve))
+    |> ignore;
 
 
 chrome##browserAction##setBadgeBackgroundColor({"color": "#FFA000"});
 chrome##alarms##create({"periodInMinutes": 30});
 chrome##storage##sync##set({"unread": 0});
 
-chrome##browserAction##setBadgeText({"text": "99"});
+chrome##alarms##onAlarm##addListener(updateNotifications);
 
 updateNotifications();
