@@ -65,11 +65,7 @@ let updateNotifications = () => Js.Promise.(
     |> catch((_error) => chrome##browserAction##setBadgeText({"text": "..."}) |> resolve))
     |> ignore;
 
-let notify: (string, string) => unit = [%bs.raw {|
-function (icon, body) {
-    return new Notification('', { icon: icon , body: body });
-}
-|}];
+[@bs.new] external notify : (string, {."icon": string, "body": string}) => unit = "Notification";
 
 let observeNotifications = (changes) => {
     let newValue = changes##unread##newValue;
@@ -83,7 +79,7 @@ let observeNotifications = (changes) => {
         if (newValue != oldValue) {
             let body = chrome##i18n##getMessage("unreadNotifications")
             |> Js.String.replace("{{AMOUNT}}", text)
-            |> notify("/public/resources/rung.png")
+            |> (body) => notify("", {"icon": "/public/resources/rung.png", "body": body})
         }
     }}
 };
