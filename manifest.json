@@ -1,0 +1,30 @@
+{
+    "background": {
+        "scripts": [
+            "extension.js"
+        ],
+        "persistent": false
+    },
+    "manifest_version": 2,
+    "name": "__MSG_appName__",
+    "short_name": "__MSG_appName__",
+    "description": "__MSG_appDesc__",
+    "version": "1.0.2",
+    "author": "Rung <developer@rung.com.br>",
+    "default_locale": "en",
+    "icons": {
+        "16": "public/resources/rung16.png",
+        "48": "public/resources/rung128.png",
+        "128": "public/resources/rung128.png"
+    },
+    "browser_action": {
+        "default_icon": "public/resources/rung16.png",
+        "default_popup": "public/index.html"
+    },
+    "permissions": [
+        "alarms",
+        "notifications",
+        "storage",
+        "tabs"
+    ]
+}
