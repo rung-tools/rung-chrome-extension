@@ -5,7 +5,8 @@
     },
     "sources": [
         "src",
-        "src/chrome"
+        "src/chrome",
+        "src/components"
     ],
     "package-specs": [
         { "module": "commonjs", "in-source": false }
@@ -14,7 +15,6 @@
     "namespace": true,
     "bs-dependencies": [
         "reason-react",
-        "bs-director",
         "bs-fetch"
     ],
     "refmt": 3

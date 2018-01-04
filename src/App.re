@@ -1,7 +1,3 @@
-type router = {.
-    "init": [@bs.meth] (string => unit)
-};
-
 module Top = {
     type action =
         | GoToNotifications;
@@ -30,9 +26,9 @@ module Top = {
         reducer,
         render: ({state: {screen}}) =>
             switch screen {
-            | NotificationsScreen => <div></div>
-            | LoginScreen => <div></div>
-            | LoadingScreen => <div></div>
+            | NotificationsScreen => <div>(ReasonReact.stringToElement("Not"))</div>
+            | LoginScreen => <div>(ReasonReact.stringToElement("Log"))</div>
+            | LoadingScreen => <LinearProgressRe determinate=false />
             }
     }
  };

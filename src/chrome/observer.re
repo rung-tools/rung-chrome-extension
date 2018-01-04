@@ -77,7 +77,7 @@ let observeNotifications = (changes) => {
         let text = n > 99 ? "99+" : string_of_int(n);
         chrome##browserAction##setBadgeText({"text": text});
         if (newValue != oldValue) {
-            let body = chrome##i18n##getMessage("unreadNotifications")
+            chrome##i18n##getMessage("unreadNotifications")
             |> Js.String.replace("{{AMOUNT}}", text)
             |> (body) => notify("", {"icon": "/public/resources/rung.png", "body": body})
         }

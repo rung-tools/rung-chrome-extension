@@ -20,11 +20,11 @@
     "BuckleScript"
   ],
   "dependencies": {
-    "bs-director": "0.0.6",
     "bs-fetch": "0.2.0",
     "react": "15.4.2",
     "react-dom": "15.4.2",
-    "reason-react": ">=0.3.0"
+    "reason-react": ">=0.3.0",
+    "rmwc": "0.0.1-rc12"
   },
   "devDependencies": {
     "bs-platform": "^2.1.0",
