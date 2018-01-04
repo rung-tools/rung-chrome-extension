@@ -1,4 +1,18 @@
-open Fetch;
+
+type storageChanges = {.
+    "unread": {.
+        "oldValue": int,
+        "newValue": int
+    }
+};
+
+type notification = {.
+    "readDate": option(string)
+};
+
+type storage = {.
+    "unread": int
+};
 
 type chrome('a) = {.
     "browserAction": {.
@@ -14,23 +28,27 @@ type chrome('a) = {.
     "storage": {.
         "sync": {.
             "set": [@bs.meth] 'a => unit
+        },
+        "onChanged": {.
+            "addListener": [@bs.meth] (storageChanges => unit) => unit
         }
+    },
+    "i18n": {.
+        "getMessage": [@bs.meth] string => string
     }
 };
 
-type notification = {.
-  "readDate": option(string)
-};
-
-[@bs.val] external chrome : chrome({."unread": int}) = "chrome";
+[@bs.val] external chrome : chrome(storage) = "chrome";
 
 [@bs.val] external parseNotifications : string => Js.Array.t(notification) = "JSON.parse";
 
 let updateNotifications = () => Js.Promise.(
-    fetchWithInit("https://app.rung.com.br/api/notifications", RequestInit.make(~credentials=Include, ()))
+    Fetch.fetchWithInit(
+        "https://app.rung.com.br/api/notifications",
+        Fetch.RequestInit.make(~credentials=Include, ()))
     |> then_((response) => {
-        Response.ok(response)
-            ? Response.text(response)
+        Fetch.Response.ok(response)
+            ? Fetch.Response.text(response)
             : Js.Exn.raiseError("")
     })
     |> then_((text) =>
@@ -47,11 +65,34 @@ let updateNotifications = () => Js.Promise.(
     |> catch((_error) => chrome##browserAction##setBadgeText({"text": "..."}) |> resolve))
     |> ignore;
 
+let notify: (string, string) => unit = [%bs.raw {|
+function (icon, body) {
+    return new Notification('', { icon: icon , body: body });
+}
+|}];
+
+let observeNotifications = (changes) => {
+    let newValue = changes##unread##newValue;
+    let oldValue = changes##unread##oldValue;
+
+    switch newValue {
+    | 0 => ()
+    | n => {
+        let text = n > 99 ? "99+" : string_of_int(n);
+        chrome##browserAction##setBadgeText({"text": text});
+        if (newValue != oldValue) {
+            let body = chrome##i18n##getMessage("unreadNotifications")
+            |> Js.String.replace("{{AMOUNT}}", text)
+            |> notify("/public/resources/rung.png")
+        }
+    }}
+};
 
 chrome##browserAction##setBadgeBackgroundColor({"color": "#FFA000"});
 chrome##alarms##create({"periodInMinutes": 30});
 chrome##storage##sync##set({"unread": 0});
 
 chrome##alarms##onAlarm##addListener(updateNotifications);
+chrome##storage##onChanged##addListener(observeNotifications);
 
 updateNotifications();
