@@ -1,0 +1,35 @@
+.notification {
+    font-size: 14px !important;
+    color: #424242;
+    cursor: pointer !important;
+    padding: 24px 12px !important;
+    margin: 12px 0px;
+}
+
+.notification:hover {
+    background: #E0E0E0;
+}
+
+.notification.unread {
+    background: #CBCBD3;
+}
+
+.notification.unread:hover {
+    background: #E0E0E0;
+}
+
+.custom-scrollbar::-webkit-scrollbar, textarea::-webkit-scrollbar {
+    width: 8px;
+    -webkit-appearance: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+    background: rgba(200, 200, 200, 0.7);
+    min-height: 36px;
+    cursor: pointer;
+    color: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover, textarea::-webkit-scrollbar-thumb:hover {
+    background: rgba(34, 167, 250, 0.7);
+}
