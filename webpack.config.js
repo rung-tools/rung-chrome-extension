@@ -29,7 +29,7 @@ const assetsPlugin = new CopyWebpackPlugin([
 
 module.exports = {
     entry: {
-        index: './lib/js/src/index.bs.js'
+        index: './lib/js/src/App.bs.js'
     },
     output: {
         path: public,
