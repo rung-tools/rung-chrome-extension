@@ -18,7 +18,7 @@ const assetsPlugin = new CopyWebpackPlugin([
     { from: 'manifest.json', to: public },
     { from: 'assets/html/index.html', to: public },
     { from: 'assets/css/styles.css', to: public },
-    { from: 'assets/css/material-components-web.css', to: public },
+    { from: 'node_modules/material-components-web/dist/material-components-web.css', to: public },
     { from: 'assets/css/material-icons.css', to: public },
     { from: 'assets/images/rung-full.png', to: resources },
     { from: 'assets/images/rung.png', to: resources },
