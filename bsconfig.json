@@ -4,7 +4,8 @@
         "react-jsx": 2
     },
     "sources": [
-        "src"
+        "src",
+        "src/chrome"
     ],
     "package-specs": [
         { "module": "commonjs", "in-source": false }

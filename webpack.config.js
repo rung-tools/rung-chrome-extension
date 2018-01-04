@@ -29,7 +29,8 @@ const assetsPlugin = new CopyWebpackPlugin([
 
 module.exports = {
     entry: {
-        index: './lib/js/src/App.bs.js'
+        index: './lib/js/src/App.bs.js',
+        observer: './lib/js/src/chrome/observer.bs.js'
     },
     output: {
         path: public,

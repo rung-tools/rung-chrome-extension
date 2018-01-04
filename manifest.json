@@ -1,7 +1,7 @@
 {
     "background": {
         "scripts": [
-            "extension.js"
+            "public/observer.min.js"
         ],
         "persistent": false
     },
