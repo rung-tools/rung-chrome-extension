@@ -14,6 +14,19 @@ const deathPlugin = function () {
     })
 }
 
+const assetsPlugin = new CopyWebpackPlugin([
+    { from: 'manifest.json', to: public },
+    { from: 'assets/html/index.html', to: public },
+    { from: 'assets/css/styles.css', to: public },
+    { from: 'assets/css/material-design-lite.css', to: public },
+    { from: 'assets/css/material-icons.css', to: public },
+    { from: 'assets/images/rung-full.png', to: resources },
+    { from: 'assets/images/rung.png', to: resources },
+    { from: 'assets/images/rung16.png', to: resources },
+    { from: 'assets/images/rung48.png', to: resources },
+    { from: 'assets/images/rung128.png', to: resources }
+]);
+
 module.exports = {
     entry: {
         index: './lib/js/src/index.bs.js'
@@ -21,5 +34,9 @@ module.exports = {
     output: {
         path: public,
         filename: '[name].min.js',
-    }
+    },
+    plugins: [
+        deathPlugin,
+        assetsPlugin
+    ]
 };
