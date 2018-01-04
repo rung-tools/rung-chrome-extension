@@ -14,7 +14,8 @@
     "namespace": true,
     "bs-dependencies": [
         "reason-react",
-        "bs-director"
+        "bs-director",
+        "bs-fetch"
     ],
     "refmt": 3
 }
