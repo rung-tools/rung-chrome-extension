@@ -1,11 +1,18 @@
 {
   "name": "rung-chrome-extension",
   "version": "0.1.0",
+  "description": "Get up to date about your Rung alerts!",
+  "repository": "https://github.com/rung-tools/rung-chrome-extension.git",
+  "author": "Rung <developer@rung.com.br>",
+  "contributors": [
+    "Marcelo Camargo <marcelo.camargo@ngi.com.br>",
+    "Vitor Emanuel Batista <vitor@ngi.com.br>",
+    "William Rozin Gaspar <william.rozin@ngi.com.br>"
+  ],
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack -w"
   },
   "keywords": [
@@ -14,12 +21,12 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "15.4.2",
+    "react-dom": "15.4.2",
     "reason-react": ">=0.3.0"
   },
   "devDependencies": {
     "bs-platform": "^2.1.0",
-    "webpack": "^3.8.1"
+    "webpack": "3.8.1"
   }
 }
