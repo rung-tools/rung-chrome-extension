@@ -1,0 +1,78 @@
+{
+    "appName": {
+        "message": "Rung",
+        "description": "Nombre de la extensión"
+    },
+    "appDesc": {
+        "message": "Recibe las notificaciones del Rung en cualquier momento!",
+        "description": "Descri de la extensión"
+    },
+    "notifications": {
+        "message": "Notificaciones",
+        "description": "Notificaciones"
+    },
+    "email": {
+        "message": "Email",
+        "description": "Correo electrónico correspondiente a la cuenta"
+    },
+    "password": {
+        "message": "Contraseña",
+        "description": "Contraseña"
+    },
+    "login": {
+        "message": "Entrar",
+        "description": "Inicio de sesión"
+    },
+    "noAccount": {
+        "message": "¿No tiene una cuenta?",
+        "description": "El usuario no tiene una cuenta"
+    },
+    "signup": {
+        "message": "¡Regístrese gratis!",
+        "description": "Registro"
+    },
+    "loading": {
+        "message": "Cargando...",
+        "description": "Carregamento"
+    },
+    "nothing": {
+        "message": "No hay nada aquí",
+        "description": "Nada para mostrar"
+    },
+    "taskCreation": {
+        "message": "Alerta {{NAME}} creado para usted",
+        "description": "Tarea creada"
+    },
+    "transference": {
+        "message": "Alerta {{NAME}} se ha transferido a usted",
+        "description": "Alerta transferida"
+    },
+    "alertCreation": {
+        "message": "Alerta {{NAME}} descubierto por una integración",
+        "description": "Alerta creada"
+    },
+    "alertUpdate": {
+        "message": "Alerta {{NAME}} ha sido actualizada",
+        "description": "Alerta actualizada"
+    },
+    "alertDeletion": {
+        "message": "Alerta {{NAME}} ha sido eliminado",
+        "description": "Alerta removida"
+    },
+    "comentario": {
+        "message": "Nuevo comentario en alerta {{NAME}}",
+        "description": "Nuevo comentario"
+    },
+    "permisos": {
+        "message": "Sus permisos han sido actualizados por {{NAME}}",
+        "description": "Actualización de permisos"
+    },
+    "unreadNotifications": {
+        "message": "Tienes {{AMOUNT}} notificaciones no leídas.",
+        "description": "Notificações não lidas"
+    },
+    "loginError": {
+        "message": "Se ha producido un error al iniciar sesión. Por favor, compruebe los datos introducidos e inténtelo de nuevo.",
+        "description": "Erro al entrar"
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "appName": {
+        "message": "Rung",
+        "description": "Extension name"
+    },
+    "appDesc": {
+        "message": "Get Rung notifications at any time!",
+        "description": "Extension description"
+    },
+    "notifications": {
+        "message": "Notifications",
+        "description": "Notifications"
+    },
+    "email": {
+        "message": "Email",
+        "description": "Email corresponding to the account"
+    },
+    "password": {
+        "message": "Password",
+        "description": "Password"
+    },
+    "Login": {
+        "message": "Login",
+        "description": "Sign in"
+    },
+    "noAccount": {
+        "message": "Do not have an account?",
+        "description": "User does not have an account"
+    },
+    "signup": {
+        "message": "Sign up for free!",
+        "description": "Registration"
+    },
+    "loading": {
+        "message": "Loading...",
+        "description": "Loading"
+    },
+    "nothing": {
+        "message": "There is nothing here",
+        "description": "Nothing to show"
+    },
+    "taskCreation": {
+        "message": "Alert {{NAME}} created for you",
+        "description": "Task created"
+    },
+    "transference": {
+        "message": "The alert {{NAME}} has been transferred to you",
+        "description": "Alert transferred"
+    },
+    "alertCreation": {
+        "message": "The alert {{NAME}} has been discovered by an integration",
+        "description": "Created alert"
+    },
+    "alertUpdate": {
+        "message": "The {{NAME}} alert has been updated",
+        "description": "Updated alert"
+    },
+    "alertDeletion": {
+        "message": "The {{NAME}} alert has been removed",
+        "description": "Alert removed"
+    },
+    "comment": {
+        "message": "New comment on {{NAME}} alert",
+        "description": "New comment"
+    },
+    "permissions": {
+        "message": "Your permissions have been updated by {{NAME}}",
+        "description": "Update on permissions"
+    },
+    "unreadNotifications": {
+        "message": "You have {{AMOUNT}} unread notifications.",
+        "description": "Unread notifications"
+    },
+    "loginError": {
+        "message": "There was an error logging in. Please check the data entered and try again.",
+        "description": "Login error"
+    }
+}
