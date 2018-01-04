@@ -1,14 +1,13 @@
 {
     "name": "react-template",
-    "reason": {"react-jsx" : 2},
+    "reason": {
+        "react-jsx": 2
+    },
     "sources": [
         "src"
     ],
     "package-specs": [
-        {
-            "module": "commonjs",
-            "in-source": true
-        }
+        { "module": "commonjs", "in-source": false }
     ],
     "suffix": ".bs.js",
     "namespace": true,
