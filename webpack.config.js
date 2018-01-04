@@ -15,7 +15,7 @@ const deathPlugin = function () {
 }
 
 module.exports = {
-    entry: './src/index.bs.js',
+    entry: './lib/js/index.bs.js',
     output: {
         path: public,
         filename: '[name].min.js',
