@@ -58,8 +58,11 @@ let make = (_children) => {
             <div style=(Style.loading)>
             {
                 switch loading {
-                | false => <LinearProgressRe determinate=(false) />
-                | true => ReasonReact.nullElement
+                | true =>
+                    <div className="progress">
+                        <div className="indeterminate" />
+                    </div>
+                | false => ReasonReact.nullElement
                 }
             }
             </div>
@@ -68,5 +71,16 @@ let make = (_children) => {
                 style=(Style.logo)
                 draggable=(Js.false_)
             />
+            <div style=(Style.content)>
+                <div className="input-field">
+                    <input
+                        autoFocus=(Js.true_)
+                        placeholder=(Chrome.(chrome##i18n##getMessage("email")))
+                        _type="text"
+                        style=(Style.input)
+                        value=email
+                    />
+                </div>
+            </div>
         </div>
 }

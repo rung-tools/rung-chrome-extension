@@ -6,7 +6,6 @@
     "sources": [
         "src",
         "src/chrome",
-        "src/components",
         "src/screens"
     ],
     "package-specs": [
