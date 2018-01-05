@@ -6,7 +6,8 @@
     "sources": [
         "src",
         "src/chrome",
-        "src/components"
+        "src/components",
+        "src/screens"
     ],
     "package-specs": [
         { "module": "commonjs", "in-source": false }

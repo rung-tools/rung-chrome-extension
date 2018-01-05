@@ -46,7 +46,7 @@ module Top = {
         render: ({state: {screen}}) =>
             switch screen {
             | NotificationsScreen => <div>(ReasonReact.stringToElement("Not"))</div>
-            | LoginScreen => <div>(ReasonReact.stringToElement("Log"))</div>
+            | LoginScreen => <Login />
             | LoadingScreen => <LinearProgressRe determinate=false />
             }
     }
