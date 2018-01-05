@@ -1,6 +1,6 @@
 type action =
-    | ChangeEmail
-    | ChangePassword;
+    | ChangeEmail(string)
+    | ChangePassword(string);
 
 type state = {
     email: string,
@@ -11,10 +11,10 @@ type state = {
 
 let component = ReasonReact.reducerComponent("Login");
 
-let reducer = (action, _state) =>
+let reducer = (action, state) =>
     switch action {
-    | ChangeEmail => ReasonReact.NoUpdate
-    | ChangePassword => ReasonReact.NoUpdate
+    | ChangeEmail(email) => ReasonReact.Update({...state, email})
+    | ChangePassword(password) => ReasonReact.Update({...state, password})
     };
 
 let initialState = () => {email: "", password: "", error: false, loading: false};
@@ -49,11 +49,21 @@ module Style = {
         ~color="#F44336", ())
 };
 
+let handleChangeEmail = (event) => event
+|> ReactEventRe.Form.target
+|> ReactDOMRe.domElementToObj
+|> (obj) => ChangeEmail(obj##value);
+
+let handleChangePassword = (event) => event
+|> ReactEventRe.Form.target
+|> ReactDOMRe.domElementToObj
+|> (obj) => ChangePassword(obj##value);
+
 let make = (_children) => {
     ...component,
     initialState,
     reducer,
-    render: ({state: {email, loading}}) =>
+    render: ({state: {email, password, loading}, reduce}) =>
         <div style=(Style.container)>
             <div style=(Style.loading)>
             {
@@ -78,8 +88,27 @@ let make = (_children) => {
                         placeholder=(Chrome.(chrome##i18n##getMessage("email")))
                         _type="text"
                         style=(Style.input)
+                        onChange=(reduce(handleChangeEmail))
                         value=email
                     />
+                    <input
+                        placeholder=(Chrome.(chrome##i18n##getMessage("password")))
+                        _type="password"
+                        style=(Style.input)
+                        onChange=(reduce(handleChangePassword))
+                        value=password
+                    />
+                </div>
+                <div style=(Style.bottom)>
+                    <a className="waves-effect waves-light btn">
+                        (ReasonReact.stringToElement(Chrome.(chrome##i18n##getMessage("login"))))
+                    </a>
+                    <div style=(Style.register)>
+                        (ReasonReact.stringToElement(Chrome.(chrome##i18n##getMessage("noAccount"))))
+                        <a style=(Style.signup)>
+                            (ReasonReact.stringToElement(Chrome.(chrome##i18n##getMessage("signup"))))
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
