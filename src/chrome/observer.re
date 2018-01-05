@@ -55,16 +55,8 @@ external parseNotifications : string => Js.Array.t(notification) = "JSON.parse";
 [@bs.val]
 external parseUser : string => user = "JSON.parse";
 
-let request = path => Js.Promise.(
-    Fetch.fetchWithInit(
-        "https://app.rung.com.br/api" ++ path,
-        Fetch.RequestInit.make(~credentials=Include, ()))
-    |> then_((response) => Fetch.Response.ok(response)
-        ? Fetch.Response.text(response)
-        : Js.Exn.raiseError("")));
-
 let updateNotifications = () => Js.Promise.(
-    all2((request("/notifications"), request("/whoami")))
+    all2((Request.request("/notifications"), Request.request("/whoami")))
     |> then_(((notifications, whoami)) =>
         parseNotifications(notifications)
         |> Js.Array.filter((notification) =>
