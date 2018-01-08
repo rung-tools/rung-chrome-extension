@@ -30,6 +30,7 @@ module Style = {
     let nothing = ReactDOMRe.Style.make(
         ~padding="64px 0",
         ~textAlign="center",
+        ~fontSize="16px",
         ~color="#9E9E9E", ());
     let header = ReactDOMRe.Style.make(
         ~lineHeight="48px",
@@ -57,7 +58,12 @@ let make = (_children) => {
             <div
                 ref=(handle(setBoxRef))
                 style=(Style.notifications)>
-
+            {
+                switch (Array.length(notifications), loading) {
+                | (0, true) => <div style=(Style.nothing)>(show(t("nothing")))</div>
+                | n => ReasonReact.nullElement
+                }
+            }
             </div>
         </div>
 }
