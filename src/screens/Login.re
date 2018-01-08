@@ -1,6 +1,7 @@
 type action =
     | ChangeEmail(string)
-    | ChangePassword(string);
+    | ChangePassword(string)
+    | SetLoginError;
 
 type state = {
     email: string,
@@ -16,6 +17,7 @@ let reducer = (action, state) =>
     switch action {
     | ChangeEmail(email) => ReasonReact.Update({...state, email})
     | ChangePassword(password) => ReasonReact.Update({...state, password})
+    | SetLoginError => ReasonReact.Update({...state, error: true})
     };
 
 let initialState = () => {
@@ -66,15 +68,17 @@ let handleChangePassword = (event) => event
 |> ReactDOMRe.domElementToObj
 |> (obj) => ChangePassword(obj##value);
 
+let handleSubmit = (_event) => SetLoginError;
+
 let handleEmailKeyDown = (event, {ReasonReact.state}) =>
     switch (ReactEventRe.Keyboard.keyCode(event), state.passwordField^, String.trim(state.email) != "") {
     | (13, Some(password), true) => ReactDOMRe.domElementToObj(password)##focus()
     | _ => ()
     };
 
-let handlePasswordKeyDown = (event, {ReasonReact.state}) =>
+let handlePasswordKeyDown = (event, {ReasonReact.state, ReasonReact.reduce}) =>
     switch (ReactEventRe.Keyboard.keyCode(event), String.trim(state.password) != "") {
-    | (13, true) => Js.log("OK")
+    | (13, true) => reduce(handleSubmit, ())
     | _ => ()
     };
 
@@ -139,7 +143,9 @@ let make = (_children) => {
                     }
                 }
                 <div style=(Style.bottom)>
-                    <a className=("waves-effect waves-light btn" ++ (loading ? " disabled" : ""))>
+                    <a
+                        className=("waves-effect waves-light btn" ++ (loading ? " disabled" : ""))
+                        onClick=(reduce(handleSubmit))>
                         (show(t("login")))
                     </a>
                     <div style=(Style.register)>
