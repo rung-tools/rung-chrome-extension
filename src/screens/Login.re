@@ -72,6 +72,9 @@ let handleEmailKeyDown = (event, {ReasonReact.state}) =>
     | _ => ()
     };
 
+let handleSignUp = (_event, _self) => Chrome.(
+    chrome##tabs##create({"url": "https://app.rung.com.br/signup/"}));
+
 let setPasswordRef = (theRef, {ReasonReact.state}) =>
     state.passwordField := Js.Nullable.to_opt(theRef);
 
@@ -125,7 +128,7 @@ let make = (_children) => {
                     </a>
                     <div style=(Style.register)>
                         (show(t("noAccount")))
-                        <a style=(Style.signup)>
+                        <a style=(Style.signup) onClick=(handle(handleSignUp))>
                             (show(t("signup")))
                         </a>
                     </div>

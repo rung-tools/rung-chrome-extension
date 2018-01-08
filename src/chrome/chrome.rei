@@ -29,6 +29,9 @@ type chrome('a) = {.
     },
     "i18n": {.
         "getMessage": [@bs.meth] string => string
+    },
+    "tabs": {.
+        "create": [@bs.meth] {."url": string} => unit
     }
 };
 
