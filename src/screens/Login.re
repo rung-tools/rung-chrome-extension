@@ -1,8 +1,6 @@
 type action =
     | ChangeEmail(string)
-    | ChangePassword(string)
-    | PressEnterOnEmail
-    | Ignore;
+    | ChangePassword(string);
 
 type state = {
     email: string,
@@ -18,14 +16,6 @@ let reducer = (action, state) =>
     switch action {
     | ChangeEmail(email) => ReasonReact.Update({...state, email})
     | ChangePassword(password) => ReasonReact.Update({...state, password})
-    | PressEnterOnEmail => ReasonReact.SideEffects((_self) => {
-        switch (String.trim(state.email) != "", state.passwordField^) {
-        | (true, Some(password)) => ReactDOMRe.domElementToObj(password)
-        |> (password) => password##focus()
-        | _ => ()
-        }
-    })
-    | Ignore => ReasonReact.NoUpdate
     };
 
 let initialState = () => {
@@ -76,10 +66,10 @@ let handleChangePassword = (event) => event
 |> ReactDOMRe.domElementToObj
 |> (obj) => ChangePassword(obj##value);
 
-let handleEmailKeyDown = (event) =>
-    switch (ReactEventRe.Keyboard.keyCode(event)) {
-    | 13 => PressEnterOnEmail
-    | _ => Ignore
+let handleEmailKeyDown = (event, {ReasonReact.state}) =>
+    switch (ReactEventRe.Keyboard.keyCode(event), state.passwordField^, String.trim(state.email) != "") {
+    | (13, Some(password), true) => ReactDOMRe.domElementToObj(password)##focus()
+    | _ => ()
     };
 
 let setPasswordRef = (theRef, {ReasonReact.state}) =>
@@ -117,7 +107,7 @@ let make = (_children) => {
                         _type="text"
                         style=(Style.input)
                         onChange=(reduce(handleChangeEmail))
-                        onKeyDown=(reduce(handleEmailKeyDown))
+                        onKeyDown=(handle(handleEmailKeyDown))
                         value=email
                     />
                     <input
