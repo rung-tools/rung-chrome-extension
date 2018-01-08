@@ -17,7 +17,7 @@ let reducer = (action, state) =>
     switch action {
     | ChangeEmail(email) => ReasonReact.Update({...state, email})
     | ChangePassword(password) => ReasonReact.Update({...state, password})
-    | SetLoginError => ReasonReact.Update({...state, error: true})
+    | SetLoginError => ReasonReact.Update({...state, loading: false, error: true})
     };
 
 let initialState = () => {
