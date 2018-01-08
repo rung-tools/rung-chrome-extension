@@ -4,7 +4,8 @@ type action =
     | ChangeEmail(string)
     | ChangePassword(string)
     | StartLoading
-    | SetLoginError;
+    | SetLoginError
+    | SetLoginSuccess;
 
 type state = {
     email: string,
@@ -22,6 +23,7 @@ let reducer = (action, state) =>
     | ChangePassword(password) => ReasonReact.Update({...state, password})
     | StartLoading => ReasonReact.Update({...state, loading: true})
     | SetLoginError => ReasonReact.Update({...state, loading: false, error: true, password: ""})
+    | SetLoginSuccess => ReasonReact.Update({...state, loading: false, error: false})
     };
 
 let initialState = () => {
@@ -72,11 +74,11 @@ let handleChangePassword = (event) => event
 |> ReactDOMRe.domElementToObj
 |> (obj) => ChangePassword(obj##value);
 
-let handleSubmit = (event, {ReasonReact.state, ReasonReact.reduce}) => {
+let handleSubmit = (_event, {ReasonReact.state, ReasonReact.reduce}) => {
     reduce((_) => StartLoading, ());
     Js.Promise.(
         login(state.email, state.password)
-        |> then_(result => Js.log(result) |> resolve)
+        |> then_((_result) => reduce((_) => SetLoginSuccess, ()) |> resolve)
         |> catch((_err) => reduce((_) => SetLoginError, ()) |> resolve))
     |> ignore
 };
