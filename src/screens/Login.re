@@ -38,7 +38,7 @@ module Style = {
     let register = ReactDOMRe.Style.make(
         ~width="100%",
         ~textAlign="center",
-        ~paddingTop="10px", ());
+        ~paddingTop="30px", ());
     let bottom = ReactDOMRe.Style.make(
         ~textAlign="center",
         ~padding="12px", ());
@@ -59,6 +59,8 @@ let handleChangePassword = (event) => event
 |> ReactDOMRe.domElementToObj
 |> (obj) => ChangePassword(obj##value);
 
+let t = key => Chrome.(chrome##i18n##getMessage(key));
+let show = ReasonReact.stringToElement;
 let make = (_children) => {
     ...component,
     initialState,
@@ -85,14 +87,14 @@ let make = (_children) => {
                 <div className="input-field">
                     <input
                         autoFocus=(Js.true_)
-                        placeholder=(Chrome.(chrome##i18n##getMessage("email")))
+                        placeholder=(t("email"))
                         _type="text"
                         style=(Style.input)
                         onChange=(reduce(handleChangeEmail))
                         value=email
                     />
                     <input
-                        placeholder=(Chrome.(chrome##i18n##getMessage("password")))
+                        placeholder=(t("password"))
                         _type="password"
                         style=(Style.input)
                         onChange=(reduce(handleChangePassword))
@@ -101,12 +103,12 @@ let make = (_children) => {
                 </div>
                 <div style=(Style.bottom)>
                     <a className="waves-effect waves-light btn">
-                        (ReasonReact.stringToElement(Chrome.(chrome##i18n##getMessage("login"))))
+                        (show(t("login")))
                     </a>
                     <div style=(Style.register)>
-                        (ReasonReact.stringToElement(Chrome.(chrome##i18n##getMessage("noAccount"))))
+                        (show(t("noAccount")))
                         <a style=(Style.signup)>
-                            (ReasonReact.stringToElement(Chrome.(chrome##i18n##getMessage("signup"))))
+                            (show(t("signup")))
                         </a>
                     </div>
                 </div>
