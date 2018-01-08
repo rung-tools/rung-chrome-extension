@@ -44,11 +44,6 @@ module Style = {
         ~textAlign="center", ());
     let content = ReactDOMRe.Style.make(
         ~margin="24px", ());
-    let loading = ReactDOMRe.Style.make(
-        ~position="absolute",
-        ~top="0px",
-        ~right="0px",
-        ~left="0px", ());
     let input = ReactDOMRe.Style.make(
         ~width="100%", ());
     let logo = ReactDOMRe.Style.make(
@@ -118,17 +113,7 @@ let make = (~onSuccess, _children) => {
     reducer,
     render: ({state: {email, password, loading, error}, reduce, handle}) =>
         <div style=(Style.container)>
-            <div style=(Style.loading)>
-            {
-                switch loading {
-                | true =>
-                    <div className="progress">
-                        <div className="indeterminate" />
-                    </div>
-                | false => ReasonReact.nullElement
-                }
-            }
-            </div>
+            <LinearLoading loading />
             <img
                 src="./resources/rung-full.png"
                 style=(Style.logo)

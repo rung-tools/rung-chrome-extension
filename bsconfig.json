@@ -5,6 +5,7 @@
     },
     "sources": [
         "src",
+        "src/components",
         "src/chrome",
         "src/screens"
     ],

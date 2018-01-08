@@ -48,12 +48,9 @@ module Top = {
         },
         render: ({state: {screen}, reduce}) =>
             switch screen {
-            | NotificationsScreen => <div>(ReasonReact.stringToElement("Not"))</div>
+            | NotificationsScreen => <NotificationList />
             | LoginScreen => <Login onSuccess=(reduce((_) => GoToNotifications)) />
-            | LoadingScreen =>
-                <div className="progress">
-                    <div className="indeterminate" />
-                </div>
+            | LoadingScreen => <LinearLoading loading=true />
             }
     }
  };
