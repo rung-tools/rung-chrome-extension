@@ -33,6 +33,7 @@ let reducer = (action, state) =>
         Request.request("/notifications")
         |> then_((result) => parseNotifications(result)
             |> (notifications) => {
+                Chrome.(chrome##browserAction##setBadgeText({"text": string_of_int(Array.length(notifications))}));
                 self.reduce((_) => SetNotifications(Js.Array.concat(state.notifications, notifications)), ())
             }
             |> resolve))
