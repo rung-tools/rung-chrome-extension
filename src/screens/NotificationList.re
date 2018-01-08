@@ -1,7 +1,7 @@
 type notification = {.
     "id": string,
     "dispatcher": string,
-    "type": string,
+    "_type": string,
     "date": string,
     "task": string
 };
@@ -84,7 +84,10 @@ let make = (_children) => {
                 | (0, false) => <div style=(Style.nothing)>(show(t("nothing")))</div>
                 | _ => notifications
                 |> Js.Array.map(notification =>
-                    <div key=(notification##id) style=(ReactDOMRe.Style.make(~paddingTop="10px", ()))>(show(notification##date))</div>)
+                    <Notification
+                        key=(notification##id)
+                        text=(notification##_type)
+                    />)
                 |> ReasonReact.arrayToElement
                 }
             }
