@@ -7,11 +7,10 @@ type notification = {.
 };
 
 type action =
-    | LoadNotifications(int)
+    | LoadNotifications
     | SetNotifications(array(notification));
 
 type state = {
-    page: int,
     notifications: array(notification),
     loading: bool,
     boxRef: ref(option(Dom.element))
@@ -23,7 +22,6 @@ external parseNotifications : string => array(notification) = "JSON.parse";
 let component = ReasonReact.reducerComponent("NotificationList");
 
 let initialState = () => {
-    page: 0,
     notifications: [||],
     loading: true,
     boxRef: ref(None)
@@ -31,10 +29,12 @@ let initialState = () => {
 
 let reducer = (action, state) =>
     switch action {
-    | LoadNotifications(_page) => ReasonReact.SideEffects((self) => Js.Promise.(
+    | LoadNotifications => ReasonReact.SideEffects((self) => Js.Promise.(
         Request.request("/notifications")
         |> then_((result) => parseNotifications(result)
-            |> (notifications) => self.reduce((_) => SetNotifications(notifications), ())
+            |> (notifications) => {
+                self.reduce((_) => SetNotifications(Js.Array.concat(state.notifications, notifications)), ())
+            }
             |> resolve))
         |> ignore)
     | SetNotifications(notifications) => ReasonReact.Update({...state, loading: false, notifications})
@@ -60,11 +60,6 @@ module Style = {
         ~color="rgba(0, 0, 0, 0.54)", ())
 };
 
-let setBoxRef = (theRef, {ReasonReact.state}) =>
-    state.boxRef := Js.Nullable.to_opt(theRef);
-
-let loadMoreNotifications = (_self) => SetNotifications([||]);
-
 let t = key => Chrome.(chrome##i18n##getMessage(key));
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
@@ -72,24 +67,23 @@ let make = (_children) => {
     initialState,
     reducer,
     didMount: (self) => {
-        self.reduce((_) => LoadNotifications(0), ());
+        self.reduce((_) => LoadNotifications, ());
         ReasonReact.NoUpdate
     },
-    render: ({state: {loading, notifications}, handle, reduce}) =>
+    render: ({state: {loading, notifications}}) =>
         <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
             </div>
             <LinearLoading loading />
             <div
-                ref=(handle(setBoxRef))
-                style=(Style.notifications)
-                onScroll=(reduce(loadMoreNotifications))>
+                style=(Style.notifications)>
             {
                 switch (Array.length(notifications), loading) {
                 | (0, false) => <div style=(Style.nothing)>(show(t("nothing")))</div>
                 | _ => notifications
-                |> Js.Array.map(notification => <div>(show(notification##date))</div>)
+                |> Js.Array.map(notification =>
+                    <div key=(notification##id) style=(ReactDOMRe.Style.make(~paddingTop="10px", ()))>(show(notification##date))</div>)
                 |> ReasonReact.arrayToElement
                 }
             }
