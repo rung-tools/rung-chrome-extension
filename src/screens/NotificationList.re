@@ -1,12 +1,24 @@
+type notification = {.
+    "id": string,
+    "dispatcher": string,
+    "type": string,
+    "date": string,
+    "task": string
+};
+
 type action =
-    | Ignore;
+    | LoadNotifications(int)
+    | SetNotifications(array(notification));
 
 type state = {
     page: int,
-    notifications: Js.Array.t(string),
+    notifications: array(notification),
     loading: bool,
     boxRef: ref(option(Dom.element))
 };
+
+[@bs.val]
+external parseNotifications : string => array(notification) = "JSON.parse";
 
 let component = ReasonReact.reducerComponent("NotificationList");
 
@@ -17,7 +29,16 @@ let initialState = () => {
     boxRef: ref(None)
 };
 
-let reducer = (action, state) => ReasonReact.NoUpdate;
+let reducer = (action, state) =>
+    switch action {
+    | LoadNotifications(_page) => ReasonReact.SideEffects((self) => Js.Promise.(
+        Request.request("/notifications")
+        |> then_((result) => parseNotifications(result)
+            |> (notifications) => self.reduce((_) => SetNotifications(notifications), ())
+            |> resolve))
+        |> ignore)
+    | SetNotifications(notifications) => ReasonReact.Update({...state, loading: false, notifications})
+    };
 
 module Style = {
     let container = ReactDOMRe.Style.make(
@@ -48,9 +69,12 @@ let make = (_children) => {
     ...component,
     initialState,
     reducer,
-    didMount: (_self) => ReasonReact.NoUpdate,
-    render: ({state: {loading, notifications}, reduce, handle}) =>
-        <div style=(Style.container) onClick=(reduce((_) => Ignore))>
+    didMount: (self) => {
+        self.reduce((_) => LoadNotifications(0), ());
+        ReasonReact.NoUpdate
+    },
+    render: ({state: {loading, notifications}, handle}) =>
+        <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
             </div>
@@ -60,8 +84,10 @@ let make = (_children) => {
                 style=(Style.notifications)>
             {
                 switch (Array.length(notifications), loading) {
-                | (0, true) => <div style=(Style.nothing)>(show(t("nothing")))</div>
-                | n => ReasonReact.nullElement
+                | (0, false) => <div style=(Style.nothing)>(show(t("nothing")))</div>
+                | _ => notifications
+                |> Js.Array.map(notification => <div>(show(notification##date))</div>)
+                |> ReasonReact.arrayToElement
                 }
             }
             </div>
