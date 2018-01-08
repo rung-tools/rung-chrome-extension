@@ -22,7 +22,10 @@ module Top = {
         switch action {
         | CheckAuthentication => ReasonReact.SideEffects((self) => Js.Promise.(
             Request.request("/whoami")
-            |> then_((text) => resolve(Some(parseUser(text))))
+            |> then_((text) => {
+                self.reduce((_) => GoToNotifications, ());
+                resolve(Some(parseUser(text)))
+            })
             |> catch((_err) => {
                 self.reduce((_) => GoToLogin, ());
                 resolve(None)

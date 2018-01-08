@@ -11,6 +11,7 @@ let login = (email, password) => Js.Promise.(
         "https://app.rung.com.br/api/login/",
         Fetch.RequestInit.make(
             ~credentials=Include,
+            ~headers=Fetch.HeadersInit.make({"content-type": "application/json"}),
             ~body=Fetch.BodyInit.make({j|
                 { "email": "$(email)", "password": "$(password)" }
             |j}),
