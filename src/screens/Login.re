@@ -15,7 +15,11 @@ type state = {
     passwordField: ref(option(Dom.element))
 };
 
-let component = ReasonReact.reducerComponent("Login");
+type retainedProps = {
+    onSuccess: unit => unit
+};
+
+let component = ReasonReact.reducerComponentWithRetainedProps("Login");
 
 let reducer = (action, state) =>
     switch action {
@@ -74,11 +78,15 @@ let handleChangePassword = (event) => event
 |> ReactDOMRe.domElementToObj
 |> (obj) => ChangePassword(obj##value);
 
-let handleSubmit = (_event, {ReasonReact.state, ReasonReact.reduce}) => {
+let handleSubmit = (_event, {ReasonReact.state, ReasonReact.reduce, ReasonReact.retainedProps}) => {
     reduce((_) => StartLoading, ());
     Js.Promise.(
         login(state.email, state.password)
-        |> then_((_result) => reduce((_) => SetLoginSuccess, ()) |> resolve)
+        |> then_((_result) => {
+            reduce((_) => SetLoginSuccess, ());
+            retainedProps.onSuccess()
+            |> resolve
+        })
         |> catch((_err) => reduce((_) => SetLoginError, ()) |> resolve))
     |> ignore
 };
@@ -103,8 +111,9 @@ let setPasswordRef = (theRef, {ReasonReact.state}) =>
 
 let t = key => Chrome.(chrome##i18n##getMessage(key));
 let show = ReasonReact.stringToElement;
-let make = (_children) => {
+let make = (~onSuccess, _children) => {
     ...component,
+    retainedProps: {onSuccess: onSuccess},
     initialState,
     reducer,
     render: ({state: {email, password, loading, error}, reduce, handle}) =>

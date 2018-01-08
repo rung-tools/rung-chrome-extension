@@ -43,10 +43,10 @@ module Top = {
             reduce((_) => CheckAuthentication, ());
             ReasonReact.NoUpdate
         },
-        render: ({state: {screen}}) =>
+        render: ({state: {screen}, reduce}) =>
             switch screen {
             | NotificationsScreen => <div>(ReasonReact.stringToElement("Not"))</div>
-            | LoginScreen => <Login />
+            | LoginScreen => <Login onSuccess=(reduce((_) => GoToNotifications)) />
             | LoadingScreen =>
                 <div className="progress">
                     <div className="indeterminate" />
