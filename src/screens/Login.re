@@ -1,12 +1,15 @@
 type action =
     | ChangeEmail(string)
-    | ChangePassword(string);
+    | ChangePassword(string)
+    | PressEnterOnEmail
+    | Ignore;
 
 type state = {
     email: string,
     password: string,
     error: bool,
     loading: bool,
+    passwordField: ref(option(Dom.element))
 };
 
 let component = ReasonReact.reducerComponent("Login");
@@ -15,9 +18,23 @@ let reducer = (action, state) =>
     switch action {
     | ChangeEmail(email) => ReasonReact.Update({...state, email})
     | ChangePassword(password) => ReasonReact.Update({...state, password})
+    | PressEnterOnEmail => ReasonReact.SideEffects((_self) => {
+        switch (String.trim(state.email) != "", state.passwordField^) {
+        | (true, Some(password)) => ReactDOMRe.domElementToObj(password)
+        |> (password) => password##focus()
+        | _ => ()
+        }
+    })
+    | Ignore => ReasonReact.NoUpdate
     };
 
-let initialState = () => {email: "", password: "", error: false, loading: false};
+let initialState = () => {
+    email: "",
+    password: "",
+    error: false,
+    loading: false,
+    passwordField: ref(None)
+};
 
 module Style = {
     let container = ReactDOMRe.Style.make(
@@ -59,13 +76,22 @@ let handleChangePassword = (event) => event
 |> ReactDOMRe.domElementToObj
 |> (obj) => ChangePassword(obj##value);
 
+let handleEmailKeyDown = (event) =>
+    switch (ReactEventRe.Keyboard.keyCode(event)) {
+    | 13 => PressEnterOnEmail
+    | _ => Ignore
+    };
+
+let setPasswordRef = (theRef, {ReasonReact.state}) =>
+    state.passwordField := Js.Nullable.to_opt(theRef);
+
 let t = key => Chrome.(chrome##i18n##getMessage(key));
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
     ...component,
     initialState,
     reducer,
-    render: ({state: {email, password, loading}, reduce}) =>
+    render: ({state: {email, password, loading}, reduce, handle}) =>
         <div style=(Style.container)>
             <div style=(Style.loading)>
             {
@@ -91,9 +117,11 @@ let make = (_children) => {
                         _type="text"
                         style=(Style.input)
                         onChange=(reduce(handleChangeEmail))
+                        onKeyDown=(reduce(handleEmailKeyDown))
                         value=email
                     />
                     <input
+                        ref=(handle(setPasswordRef))
                         placeholder=(t("password"))
                         _type="password"
                         style=(Style.input)
