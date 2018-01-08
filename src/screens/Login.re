@@ -72,6 +72,12 @@ let handleEmailKeyDown = (event, {ReasonReact.state}) =>
     | _ => ()
     };
 
+let handlePasswordKeyDown = (event, {ReasonReact.state}) =>
+    switch (ReactEventRe.Keyboard.keyCode(event), String.trim(state.password) != "") {
+    | (13, true) => Js.log("OK")
+    | _ => ()
+    };
+
 let handleSignUp = (_event, _self) => Chrome.(
     chrome##tabs##create({"url": "https://app.rung.com.br/signup/"}));
 
@@ -84,7 +90,7 @@ let make = (_children) => {
     ...component,
     initialState,
     reducer,
-    render: ({state: {email, password, loading}, reduce, handle}) =>
+    render: ({state: {email, password, loading, error}, reduce, handle}) =>
         <div style=(Style.container)>
             <div style=(Style.loading)>
             {
@@ -119,11 +125,21 @@ let make = (_children) => {
                         _type="password"
                         style=(Style.input)
                         onChange=(reduce(handleChangePassword))
+                        onKeyDown=(handle(handlePasswordKeyDown))
                         value=password
                     />
                 </div>
+                {
+                    switch error {
+                    | true =>
+                        <div style=(Style.error)>
+                            (show(t("loginError")))
+                        </div>
+                    | false => ReasonReact.nullElement
+                    }
+                }
                 <div style=(Style.bottom)>
-                    <a className="waves-effect waves-light btn">
+                    <a className=("waves-effect waves-light btn" ++ (loading ? " disabled" : ""))>
                         (show(t("login")))
                     </a>
                     <div style=(Style.register)>
