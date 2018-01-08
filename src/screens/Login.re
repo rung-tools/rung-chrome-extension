@@ -1,6 +1,9 @@
+open Request;
+
 type action =
     | ChangeEmail(string)
     | ChangePassword(string)
+    | StartLoading
     | SetLoginError;
 
 type state = {
@@ -17,7 +20,8 @@ let reducer = (action, state) =>
     switch action {
     | ChangeEmail(email) => ReasonReact.Update({...state, email})
     | ChangePassword(password) => ReasonReact.Update({...state, password})
-    | SetLoginError => ReasonReact.Update({...state, loading: false, error: true})
+    | StartLoading => ReasonReact.Update({...state, loading: true})
+    | SetLoginError => ReasonReact.Update({...state, loading: false, error: true, password: ""})
     };
 
 let initialState = () => {
@@ -68,7 +72,14 @@ let handleChangePassword = (event) => event
 |> ReactDOMRe.domElementToObj
 |> (obj) => ChangePassword(obj##value);
 
-let handleSubmit = (_event) => SetLoginError;
+let handleSubmit = (event, {ReasonReact.state, ReasonReact.reduce}) => {
+    reduce((_) => StartLoading, ());
+    Js.Promise.(
+        login(state.email, state.password)
+        |> then_(result => Js.log(result) |> resolve)
+        |> catch((_err) => reduce((_) => SetLoginError, ()) |> resolve))
+    |> ignore
+};
 
 let handleEmailKeyDown = (event, {ReasonReact.state}) =>
     switch (ReactEventRe.Keyboard.keyCode(event), state.passwordField^, String.trim(state.email) != "") {
@@ -76,9 +87,9 @@ let handleEmailKeyDown = (event, {ReasonReact.state}) =>
     | _ => ()
     };
 
-let handlePasswordKeyDown = (event, {ReasonReact.state, ReasonReact.reduce}) =>
+let handlePasswordKeyDown = (event, {ReasonReact.state, ReasonReact.handle}) =>
     switch (ReactEventRe.Keyboard.keyCode(event), String.trim(state.password) != "") {
-    | (13, true) => reduce(handleSubmit, ())
+    | (13, true) => handle(handleSubmit, ())
     | _ => ()
     };
 
@@ -145,7 +156,7 @@ let make = (_children) => {
                 <div style=(Style.bottom)>
                     <a
                         className=("waves-effect waves-light btn" ++ (loading ? " disabled" : ""))
-                        onClick=(reduce(handleSubmit))>
+                        onClick=(handle(handleSubmit))>
                         (show(t("login")))
                     </a>
                     <div style=(Style.register)>
