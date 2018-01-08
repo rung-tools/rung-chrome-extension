@@ -63,6 +63,8 @@ module Style = {
 let setBoxRef = (theRef, {ReasonReact.state}) =>
     state.boxRef := Js.Nullable.to_opt(theRef);
 
+let loadMoreNotifications = (_self) => SetNotifications([||]);
+
 let t = key => Chrome.(chrome##i18n##getMessage(key));
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
@@ -73,7 +75,7 @@ let make = (_children) => {
         self.reduce((_) => LoadNotifications(0), ());
         ReasonReact.NoUpdate
     },
-    render: ({state: {loading, notifications}, handle}) =>
+    render: ({state: {loading, notifications}, handle, reduce}) =>
         <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
@@ -81,7 +83,8 @@ let make = (_children) => {
             <LinearLoading loading />
             <div
                 ref=(handle(setBoxRef))
-                style=(Style.notifications)>
+                style=(Style.notifications)
+                onScroll=(reduce(loadMoreNotifications))>
             {
                 switch (Array.length(notifications), loading) {
                 | (0, false) => <div style=(Style.nothing)>(show(t("nothing")))</div>
