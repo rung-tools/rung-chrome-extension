@@ -3,7 +3,9 @@ type notification = {.
     "dispatcher": string,
     "_type": string,
     "date": string,
-    "task": string
+    "task": string,
+    "name": string,
+    "values": array(string)
 };
 
 type action =
@@ -61,6 +63,13 @@ module Style = {
         ~color="rgba(0, 0, 0, 0.54)", ())
 };
 
+let getNotificationStyles = (notification) =>
+    switch (notification##_type) {
+    | "alerts-created" => ("alarm", "black",
+        (string_of_int(Array.length(notification##values)) ++ " alert(s) discovered by " ++ notification##name))
+    | _ => ("alarm", "red", "")
+    };
+
 let t = key => Chrome.(chrome##i18n##getMessage(key));
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
@@ -83,12 +92,21 @@ let make = (_children) => {
                 switch (Array.length(notifications), loading) {
                 | (0, false) => <div style=(Style.nothing)>(show(t("nothing")))</div>
                 | _ => notifications
-                |> Js.Array.map(notification =>
+                |> Js.Array.map(notification => {
+                    let (icon, color, text) = getNotificationStyles(notification);
+
                     <Notification
                         key=(notification##id)
-                        text=(notification##_type)
-                    />)
+                        text
+                        color
+                        icon
+                    />
+                })
                 |> ReasonReact.arrayToElement
+                |> (elements) =>
+                    <ul className="collection">
+                        (elements)
+                    </ul>
                 }
             }
             </div>
