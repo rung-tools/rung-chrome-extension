@@ -65,8 +65,10 @@ module Style = {
 
 let getNotificationStyles = (notification) =>
     switch (notification##_type) {
-    | "alerts-created" => ("alarm", "black",
+    | "alerts-created" => ("list", "green",
         (string_of_int(Array.length(notification##values)) ++ " alert(s) discovered by " ++ notification##name))
+    | "alerts-updated" => ("system_update_alt", "teal",
+        (string_of_int(Array.length(notification##values)) ++ " alert(s) updated by " ++ notification##name))
     | _ => ("alarm", "red", "")
     };
 
@@ -87,6 +89,7 @@ let make = (_children) => {
             </div>
             <LinearLoading loading />
             <div
+                className="custom-scrollbar"
                 style=(Style.notifications)>
             {
                 switch (Array.length(notifications), loading) {
