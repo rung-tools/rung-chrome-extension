@@ -1,9 +1,6 @@
 .notification {
-    font-size: 14px !important;
     color: #424242;
     cursor: pointer !important;
-    padding: 24px 12px !important;
-    margin: 12px 0px;
 }
 
 .notification:hover {

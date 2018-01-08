@@ -14,7 +14,7 @@ let show = ReasonReact.stringToElement;
 let make = (~text, ~color, ~icon, _children) => {
     ...component,
     render: (_self) =>
-        <li className="collection-item avatar">
+        <li className="collection-item avatar notification">
             <i className=("material-icons circle " ++ color)>(ReasonReact.stringToElement(icon))</i>
             <h6>(ReasonReact.stringToElement(text))</h6>
             <p>(ReasonReact.stringToElement(DateFns.distanceInWordsToNow(now())))</p>
