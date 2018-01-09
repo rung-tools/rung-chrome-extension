@@ -67,6 +67,8 @@ module Style = {
         ~color="rgba(0, 0, 0, 0.54)", ())
 };
 
+let t = key => Chrome.(chrome##i18n##getMessage(key));
+
 let countAlerts = notification =>
     switch (notification##values) {
     | Some(result) => Array.length(result)
@@ -76,13 +78,21 @@ let countAlerts = notification =>
 let getNotificationStyles = (notification) =>
     switch (notification##_type) {
     | "alerts-created" => ("list", "green",
-        (string_of_int(countAlerts(notification)) ++ " alert(s) discovered by " ++ notification##name))
+        t("alertsCreated")
+        |> Js.String.replace("{{COUNT}}", string_of_int(countAlerts(notification)))
+        |> Js.String.replace("{{APP}}", notification##name))
     | "alerts-updated" => ("system_update_alt", "teal",
-        (string_of_int(countAlerts(notification)) ++ " alert(s) updated by " ++ notification##name))
+        t("alertsUpdated")
+        |> Js.String.replace("{{COUNT}}", string_of_int(countAlerts(notification)))
+        |> Js.String.replace("{{APP}}", notification##name))
+    | "permissions-updated" => ("security", "pink", t("permissionsUpdated"))
+    | "task-created" => ("warning", "red", t("taskCreated"))
+    | "alert-comment" => ("comment", "indigo", t("alertComment"))
+    | "alert-follow" => ("people", "brown", t("alertFollow"))
+    | "alert-unfollow" => ("do_not_disturb", "red", t("alertUnfollow"))
     | _ => ("alarm", "red", "")
     };
 
-let t = key => Chrome.(chrome##i18n##getMessage(key));
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
     ...component,

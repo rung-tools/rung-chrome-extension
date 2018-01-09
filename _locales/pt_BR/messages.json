@@ -39,34 +39,6 @@
         "message": "Não há nada aqui",
         "description": "Nada para mostrar"
     },
-    "taskCreation": {
-        "message": "Alerta {{NAME}} criado para você",
-        "description": "Tarefa criada"
-    },
-    "transference": {
-        "message": "O alerta {{NAME}} foi transferido para você",
-        "description": "Alerta transferido"
-    },
-    "alertCreation": {
-        "message": "O alerta {{NAME}} foi descoberto por uma integração",
-        "description": "Alerta criado"
-    },
-    "alertUpdate": {
-        "message": "O alerta {{NAME}} foi atualizado",
-        "description": "Alerta atualizado"
-    },
-    "alertDeletion": {
-        "message": "O alerta {{NAME}} foi removido",
-        "description": "Alerta removido"
-    },
-    "comment": {
-        "message": "Novo comentário no alerta {{NAME}}",
-        "description": "Novo comentário"
-    },
-    "permissions": {
-        "message": "Suas permissões foram atualizadas por {{NAME}}",
-        "description": "Atualização nas permissões"
-    },
     "unreadNotifications": {
         "message": "Você tem {{AMOUNT}} notificações não lidas.",
         "description": "Notificações não lidas"
@@ -74,5 +46,33 @@
     "loginError": {
         "message": "Ocorreu um erro ao realizar o login. Por favor, verifique os dados inseridos e tente novamente.",
         "description": "Erro ao entrar"
+    },
+    "alertsCreated": {
+        "message": "{{COUNT}} alerta(s) descobertos por {{APP}}",
+        "description": "Alertas criados"
+    },
+    "alertsUpdated": {
+        "message": "{{COUNT}} alerta(s) atualizados por {{APP}}",
+        "description": "Alertas atualizados"
+    },
+    "permissionsUpdated": {
+        "message": "Suas permissões foram atualizadas",
+        "description": "Permissões atualizadas"
+    },
+    "taskCreated": {
+        "message": "Alguém lhe atribuiu uma tarefa",
+        "description": "Tarefa criada"
+    },
+    "alertComment": {
+        "message": "Um alerta recebeu novos comentários",
+        "description": "Comentário de alerta"
+    },
+    "alertFollow": {
+        "message": "Um alerta recebeu novos seguidores",
+        "description": "Seguindo alerta"
+    },
+    "alertUnfollow": {
+        "message": "Um alerta perdeu seguidores",
+        "description": "Deixar de seguir alerta"
     }
 }

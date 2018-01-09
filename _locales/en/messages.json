@@ -39,34 +39,6 @@
         "message": "There is nothing here",
         "description": "Nothing to show"
     },
-    "taskCreation": {
-        "message": "Alert {{NAME}} created for you",
-        "description": "Task created"
-    },
-    "transference": {
-        "message": "The alert {{NAME}} has been transferred to you",
-        "description": "Alert transferred"
-    },
-    "alertCreation": {
-        "message": "The alert {{NAME}} has been discovered by an integration",
-        "description": "Created alert"
-    },
-    "alertUpdate": {
-        "message": "The {{NAME}} alert has been updated",
-        "description": "Updated alert"
-    },
-    "alertDeletion": {
-        "message": "The {{NAME}} alert has been removed",
-        "description": "Alert removed"
-    },
-    "comment": {
-        "message": "New comment on {{NAME}} alert",
-        "description": "New comment"
-    },
-    "permissions": {
-        "message": "Your permissions have been updated by {{NAME}}",
-        "description": "Update on permissions"
-    },
     "unreadNotifications": {
         "message": "You have {{AMOUNT}} unread notifications.",
         "description": "Unread notifications"
@@ -74,5 +46,33 @@
     "loginError": {
         "message": "There was an error logging in. Please check the data entered and try again.",
         "description": "Login error"
+    },
+    "alertsCreated": {
+        "message": "{{COUNT}} alert(s) discovered by {{APP}}",
+        "description": "Alerts created"
+    },
+    "alertsUpdated": {
+        "message": "{{COUNT}} alert(s) updated by {{APP}}",
+        "description": "Alerts updated"
+    },
+    "permissionsUpdated": {
+        "message": "Your permissions have been updated",
+        "description": "Permissions updated"
+    },
+    "taskCreated": {
+        "message": "Somebody assigned you a task",
+        "description": "Task created"
+    },
+    "alertComment": {
+        "message": "An alert received new comments",
+        "description": "Alert comment"
+    },
+    "alertFollow": {
+        "message": "An alert got new followers",
+        "description": "Alert follow"
+    },
+    "alertUnfollow": {
+        "message": "An alert got new unfollows",
+        "description": "Alert unfollow"
     }
 }
