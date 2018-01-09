@@ -5,7 +5,7 @@ type notification = {.
     "date": string,
     "task": string,
     "name": string,
-    "values": array(string)
+    "values": option(array(string))
 };
 
 type action =
@@ -35,8 +35,12 @@ let reducer = (action, state) =>
         Request.request("/notifications")
         |> then_((result) => parseNotifications(result)
             |> (notifications) => {
-                Chrome.(chrome##browserAction##setBadgeText({"text": string_of_int(Array.length(notifications))}));
-                self.reduce((_) => SetNotifications(Js.Array.concat(state.notifications, notifications)), ())
+                let validNotifications = notifications
+                |> Js.Array.filter((notification) => String.lowercase(notification##_type) == notification##_type);
+
+                Chrome.(chrome##browserAction##setBadgeText(
+                    {"text": string_of_int(Array.length(validNotifications))}));
+                self.reduce((_) => SetNotifications(Js.Array.concat(state.notifications, validNotifications)), ())
             }
             |> resolve))
         |> ignore)
@@ -63,12 +67,18 @@ module Style = {
         ~color="rgba(0, 0, 0, 0.54)", ())
 };
 
+let countAlerts = notification =>
+    switch (notification##values) {
+    | Some(result) => Array.length(result)
+    | None => 0
+    };
+
 let getNotificationStyles = (notification) =>
     switch (notification##_type) {
     | "alerts-created" => ("list", "green",
-        (string_of_int(Array.length(notification##values)) ++ " alert(s) discovered by " ++ notification##name))
+        (string_of_int(countAlerts(notification)) ++ " alert(s) discovered by " ++ notification##name))
     | "alerts-updated" => ("system_update_alt", "teal",
-        (string_of_int(Array.length(notification##values)) ++ " alert(s) updated by " ++ notification##name))
+        (string_of_int(countAlerts(notification)) ++ " alert(s) updated by " ++ notification##name))
     | _ => ("alarm", "red", "")
     };
 
