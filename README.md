@@ -1,7 +1,7 @@
 # Rung Chrome Extension
 
 <center>
-![Logo](./resources/logo.png)
+    <img src="./resources/logo.png" />
 </center>
 
 > This is the official extension for Chrome (and Firefox compatible) for Rung, the exceptionalities manager.
