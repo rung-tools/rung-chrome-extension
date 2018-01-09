@@ -4,7 +4,7 @@ This is the official extension for Chrome (and Firefox compatible) for Rung, the
 
 ![Screenshot](./resources/demo.png)
 
-The extension is currently available in portuguese, english and spanish. We'll add more languages soon!
+The extension is currently available in portuguese, english, french and spanish. We'll add more languages soon!
 
 ## Contributing
 
