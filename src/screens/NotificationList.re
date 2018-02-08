@@ -94,7 +94,7 @@ let getNotificationStyles = (notification) =>
     | "alert-unfollow" => ("do_not_disturb", "red", t("alertUnfollow"))
     | "alert-manually-deleted" => ("delete_forever", "red",
         t("alertDeleted")
-        |> replace("{{TTILE}}", notification##name))
+        |> replace("{{TITLE}}", notification##name))
     | _ => ("alarm", "red", "")
     };
 
