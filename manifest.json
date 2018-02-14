@@ -1,7 +1,7 @@
 {
     "background": {
         "scripts": [
-            "public/observer.min.js"
+            "observer.min.js"
         ],
         "persistent": false
     },
@@ -13,13 +13,13 @@
     "author": "Rung <developer@rung.com.br>",
     "default_locale": "en",
     "icons": {
-        "16": "public/resources/rung16.png",
-        "48": "public/resources/rung128.png",
-        "128": "public/resources/rung128.png"
+        "16": "resources/rung16.png",
+        "48": "resources/rung128.png",
+        "128": "resources/rung128.png"
     },
     "browser_action": {
-        "default_icon": "public/resources/rung16.png",
-        "default_popup": "public/index.html"
+        "default_icon": "resources/rung16.png",
+        "default_popup": "index.html"
     },
     "permissions": [
         "alarms",
