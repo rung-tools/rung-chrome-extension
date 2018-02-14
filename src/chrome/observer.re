@@ -40,7 +40,10 @@ let updateNotifications = () => Js.Promise.(
     |> ignore;
 
 [@bs.new]
-external notify : (string, {."icon": string, "body": string}) => unit = "Notification";
+external notify : (string, {."icon": string, "body": string}) => {.
+    [@bs.set] "onclick": unit => unit,
+    [@bs.meth] "close": unit => unit
+} = "Notification";
 
 let observeNotifications = (changes) => {
     let newValue = changes##unread##newValue;
@@ -55,7 +58,10 @@ let observeNotifications = (changes) => {
         if (newValue != oldValue) {
             chrome##i18n##getMessage("unreadNotifications")
             |> Js.String.replace("{{AMOUNT}}", text)
-            |> (body) => notify(user, {"icon": "/resources/rung.png", "body": body})
+            |> (body) => {
+                let popup = notify(user, {"icon": "/resources/rung.png", "body": body});
+                popup##onclick #= (() => popup##close())
+            }
         }
     }}
 };
