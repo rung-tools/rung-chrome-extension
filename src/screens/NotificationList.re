@@ -3,7 +3,7 @@ type notification = {.
     "dispatcher": string,
     "_type": string,
     "date": string,
-    "task": string,
+    "task": Js.Nullable.t(string),
     "name": string,
     "values": option(array(string))
 };
@@ -132,6 +132,7 @@ let make = (_children) => {
                         text
                         color
                         icon
+                        task=(notification##task)
                     />
                 })
                 |> ReasonReact.arrayToElement
