@@ -1,7 +1,8 @@
 open Chrome;
 
 type notification = {.
-    "readDate": option(string)
+    "readDate": option(string),
+    "_type": string
 };
 
 type user = {.
@@ -26,7 +27,7 @@ let updateNotifications = () => Js.Promise.(
         |> Js.Array.filter((notification) =>
             switch (notification##readDate) {
             | Some(_date) => false
-            | None => true
+            | None => String.lowercase(notification##_type) == notification##_type
             })
         |> (notifications) => {
             "unread": Array.length(notifications),
