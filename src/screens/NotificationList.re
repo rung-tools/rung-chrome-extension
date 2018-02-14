@@ -3,7 +3,7 @@ type notification = {.
     "dispatcher": string,
     "_type": string,
     "date": string,
-    "task": string,
+    "task": Js.Nullable.t(string),
     "name": string,
     "values": option(array(string))
 };
@@ -87,6 +87,10 @@ let getNotificationStyles = (notification) =>
         t("alertsUpdated")
         |> replace("{{COUNT}}", string_of_int(countAlerts(notification)))
         |> replace("{{APP}}", notification##name))
+    | "alerts-deleted" => ("delete", "red",
+        t("alertsDeleted")
+        |> replace("{{COUNT}}", string_of_int(countAlerts(notification)))
+        |> replace("{{APP}}", notification##name))
     | "permissions-updated" => ("security", "pink", t("permissionsUpdated"))
     | "task-created" => ("warning", "red", t("taskCreated"))
     | "alert-comment" => ("comment", "indigo", t("alertComment"))
@@ -128,6 +132,7 @@ let make = (_children) => {
                         text
                         color
                         icon
+                        task=(notification##task)
                     />
                 })
                 |> ReasonReact.arrayToElement

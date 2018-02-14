@@ -1,7 +1,8 @@
 open Chrome;
 
 type notification = {.
-    "readDate": option(string)
+    "readDate": option(string),
+    "_type": string
 };
 
 type user = {.
@@ -26,7 +27,7 @@ let updateNotifications = () => Js.Promise.(
         |> Js.Array.filter((notification) =>
             switch (notification##readDate) {
             | Some(_date) => false
-            | None => true
+            | None => String.lowercase(notification##_type) == notification##_type
             })
         |> (notifications) => {
             "unread": Array.length(notifications),
@@ -39,7 +40,10 @@ let updateNotifications = () => Js.Promise.(
     |> ignore;
 
 [@bs.new]
-external notify : (string, {."icon": string, "body": string}) => unit = "Notification";
+external notify : (string, {."icon": string, "body": string}) => {.
+    [@bs.set] "onclick": unit => unit,
+    [@bs.meth] "close": unit => unit
+} = "Notification";
 
 let observeNotifications = (changes) => {
     let newValue = changes##unread##newValue;
@@ -54,7 +58,10 @@ let observeNotifications = (changes) => {
         if (newValue != oldValue) {
             chrome##i18n##getMessage("unreadNotifications")
             |> Js.String.replace("{{AMOUNT}}", text)
-            |> (body) => notify(user, {"icon": "/public/resources/rung.png", "body": body})
+            |> (body) => {
+                let popup = notify(user, {"icon": "/resources/rung.png", "body": body});
+                popup##onclick #= (() => popup##close())
+            }
         }
     }}
 };

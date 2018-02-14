@@ -3,6 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const public = path.join(__dirname, 'public')
 const resources = path.join(public, 'resources')
+const locales = path.join(public, '_locales')
 
 const deathPlugin = function () {
     this.plugin('done', stats => {
@@ -16,6 +17,7 @@ const deathPlugin = function () {
 
 const assetsPlugin = new CopyWebpackPlugin([
     { from: 'manifest.json', to: public },
+    { from: '_locales', to: locales },
     { from: 'assets/html/index.html', to: public },
     { from: 'assets/css/styles.css', to: public },
     { from: 'assets/images/rung-full.png', to: resources },
