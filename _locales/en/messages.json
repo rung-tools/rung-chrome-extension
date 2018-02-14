@@ -78,5 +78,9 @@
     "alertUnfollow": {
         "message": "An alert got new unfollows",
         "description": "Alert unfollow"
+    },
+    "alertDeleted": {
+        "message": "The alert {{TITLE}} was deleted",
+        "description": "Alert deleted"
     }
 }

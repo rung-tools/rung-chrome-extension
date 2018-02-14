@@ -78,5 +78,9 @@
     "alertUnfollow": {
         "message": "Um alerta perdeu seguidores",
         "description": "Deixar de seguir alerta"
+    },
+    "alertDeleted": {
+        "message": "O alerta {{TITLE}} foi excluído",
+        "description": "Alerta excluído"
     }
 }
