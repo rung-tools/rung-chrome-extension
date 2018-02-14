@@ -85,6 +85,10 @@ let getNotificationStyles = (notification) =>
         t("alertsUpdated")
         |> Js.String.replace("{{COUNT}}", string_of_int(countAlerts(notification)))
         |> Js.String.replace("{{APP}}", notification##name))
+    | "alerts-deleted" => ("delete", "red",
+        t("alertsDeleted")
+        |> Js.String.replace("{{COUNT}}", string_of_int(countAlerts(notification)))
+        |> Js.String.replace("{{APP}}", notification##name))
     | "permissions-updated" => ("security", "pink", t("permissionsUpdated"))
     | "task-created" => ("warning", "red", t("taskCreated"))
     | "alert-comment" => ("comment", "indigo", t("alertComment"))

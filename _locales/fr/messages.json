@@ -55,6 +55,10 @@
         "message": "{{COUNT}} alerte(s) mise à jour par {{APP}}",
         "description": "Alertes mise à jour"
     },
+    "alertsDeleted": {
+        "message": "{{COUNT}} alerte(s) a été exclu de {{APP}}",
+        "description": "Alertes exclu"
+    },
     "permissionsUpdated": {
         "message": "Vos autorisations ont été mis à jour",
         "description": "Mise à jour de les autorisations"

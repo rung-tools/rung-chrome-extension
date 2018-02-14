@@ -55,6 +55,10 @@
         "message": "{{COUNT}} alert(s) updated by {{APP}}",
         "description": "Alerts updated"
     },
+    "alertsDeleted": {
+        "message": "{{COUNT}} alert(s) deleted from {{APP}}",
+        "description": "Alerts deleted"
+    },
     "permissionsUpdated": {
         "message": "Your permissions have been updated",
         "description": "Permissions updated"
