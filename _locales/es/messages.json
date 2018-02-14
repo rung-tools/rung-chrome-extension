@@ -72,7 +72,11 @@
         "description": "Seguiendo alerta"
     },
     "alertUnfollow": {
-        "message": "Um alerta ha perdido algunos de los seguidores",
+        "message": "Un alerta ha perdido algunos de los seguidores",
         "description": "Dejar de seguir alerta"
+    },
+    "alertDeleted": {
+        "message": "Lo alerta {{TITLE}} ha sido borrado",
+        "description": "Alerta borrado"
     }
 }

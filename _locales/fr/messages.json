@@ -74,5 +74,9 @@
     "alertUnfollow": {
         "message": "Une alerte perdu adeptes",
         "description": "Alerte perdu adepts"
+    },
+    "alertDeleted": {
+        "message": "Le alerte {{TITLE}} a été exclu",
+        "description": "Alerte exclu"
     }
 }

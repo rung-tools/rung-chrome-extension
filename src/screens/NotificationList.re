@@ -69,6 +69,8 @@ module Style = {
 
 let t = key => Chrome.(chrome##i18n##getMessage(key));
 
+let replace = Js.String.replace;
+
 let countAlerts = notification =>
     switch (notification##values) {
     | Some(result) => Array.length(result)
@@ -79,17 +81,20 @@ let getNotificationStyles = (notification) =>
     switch (notification##_type) {
     | "alerts-created" => ("list", "green",
         t("alertsCreated")
-        |> Js.String.replace("{{COUNT}}", string_of_int(countAlerts(notification)))
-        |> Js.String.replace("{{APP}}", notification##name))
+        |> replace("{{COUNT}}", string_of_int(countAlerts(notification)))
+        |> replace("{{APP}}", notification##name))
     | "alerts-updated" => ("system_update_alt", "teal",
         t("alertsUpdated")
-        |> Js.String.replace("{{COUNT}}", string_of_int(countAlerts(notification)))
-        |> Js.String.replace("{{APP}}", notification##name))
+        |> replace("{{COUNT}}", string_of_int(countAlerts(notification)))
+        |> replace("{{APP}}", notification##name))
     | "permissions-updated" => ("security", "pink", t("permissionsUpdated"))
     | "task-created" => ("warning", "red", t("taskCreated"))
     | "alert-comment" => ("comment", "indigo", t("alertComment"))
     | "alert-follow" => ("people", "brown", t("alertFollow"))
     | "alert-unfollow" => ("do_not_disturb", "red", t("alertUnfollow"))
+    | "alert-manually-deleted" => ("delete_forever", "red",
+        t("alertDeleted")
+        |> replace("{{TITLE}}", notification##name))
     | _ => ("alarm", "red", "")
     };
 

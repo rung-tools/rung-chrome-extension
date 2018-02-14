@@ -1,6 +1,6 @@
 let request = (path) => Js.Promise.(
     Fetch.fetchWithInit(
-        "http://app.rung.plutao/api" ++ path,
+        "http://app.rung.com.br/api" ++ path,
         Fetch.RequestInit.make(~credentials=Include, ()))
     |> then_((response) => Fetch.Response.ok(response)
         ? Fetch.Response.text(response)
@@ -8,7 +8,7 @@ let request = (path) => Js.Promise.(
 
 let login = (email, password) => Js.Promise.(
     Fetch.fetchWithInit(
-        "http://app.rung.plutao/api/login/",
+        "http://app.rung.com.br/api/login/",
         Fetch.RequestInit.make(
             ~credentials=Include,
             ~headers=Fetch.HeadersInit.make({"content-type": "application/json"}),
