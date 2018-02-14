@@ -55,7 +55,7 @@ let observeNotifications = (changes) => {
         if (newValue != oldValue) {
             chrome##i18n##getMessage("unreadNotifications")
             |> Js.String.replace("{{AMOUNT}}", text)
-            |> (body) => notify(user, {"icon": "/public/resources/rung.png", "body": body})
+            |> (body) => notify(user, {"icon": "/resources/rung.png", "body": body})
         }
     }}
 };
