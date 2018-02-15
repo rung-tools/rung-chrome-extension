@@ -171,6 +171,7 @@ let make = (_children) => {
 
                             handle((_event, _self) => handleClickNotification(notification), ())
                         })
+                        date=(notification##date)
                         read=(!Js.Nullable.test(notification##readDate))
                     />
                 })
