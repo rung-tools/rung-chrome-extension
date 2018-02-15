@@ -1,6 +1,6 @@
 type notification = {.
     "id": string,
-    "dispatcher": string,
+    "dispatcher": Js.Nullable.t(string),
     "_type": string,
     "date": string,
     "task": Js.Nullable.t(string),
@@ -113,6 +113,27 @@ let getNotificationStyles = (notification) =>
     | _ => ("alarm", "red", "")
     };
 
+let (>>=) = Js.Nullable.bind;
+
+let openTab = (kind, suffix) =>
+    Chrome.(chrome##tabs##create({"url": "https://app.rung.com.br/" ++ kind ++ "/" ++ suffix}));
+
+let handleClickNotification = (notification) =>
+    switch (notification##_type) {
+    | "alerts-created" | "alerts-updated" =>
+        notification##values >>= ([@bs] (values) => values
+            |> Js.Array.joinWith(";")
+            |> openTab("n"))
+        |> ignore
+    | "permissions-updated" | "alerts-manually-deleted" | "alerts-deleted" => ()
+    | "alert-comment" | "alert-follow" | "alert-unfollow" | "task-created" =>
+        notification##dispatcher >>= ([@bs] (dispatcher) => openTab("i", dispatcher))
+        |> ignore
+    | _ =>
+        notification##task >>= ([@bs] (task) => openTab("i", task))
+        |> ignore
+    };
+
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
     ...component,
@@ -122,7 +143,7 @@ let make = (_children) => {
         self.reduce((_) => LoadNotifications, ());
         ReasonReact.NoUpdate
     },
-    render: ({state: {loading, notifications}, reduce}) =>
+    render: ({state: {loading, notifications}, handle, reduce}) =>
         <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
@@ -146,7 +167,9 @@ let make = (_children) => {
                         onClick=((_) => {
                             if (Js.Nullable.test(notification##readDate)) {
                                 reduce((_) => ReadNotification(notification##id), ())
-                            }
+                            };
+
+                            handle((_event, _self) => handleClickNotification(notification), ())
                         })
                         read=(!Js.Nullable.test(notification##readDate))
                     />
