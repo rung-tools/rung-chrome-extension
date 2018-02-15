@@ -4,13 +4,15 @@ type notification = {.
     "_type": string,
     "date": string,
     "task": Js.Nullable.t(string),
+    "readDate": Js.Nullable.t(string),
     "name": string,
     "values": option(array(string))
 };
 
 type action =
     | LoadNotifications
-    | SetNotifications(array(notification));
+    | SetNotifications(array(notification))
+    | ReadNotification(string);
 
 type state = {
     notifications: array(notification),
@@ -40,11 +42,15 @@ let reducer = (action, state) =>
 
                 Chrome.(chrome##browserAction##setBadgeText(
                     {"text": string_of_int(Array.length(validNotifications))}));
-                self.reduce((_) => SetNotifications(Js.Array.concat(state.notifications, validNotifications)), ())
+                self.reduce((_) => SetNotifications(validNotifications), ())
             }
             |> resolve))
         |> ignore)
     | SetNotifications(notifications) => ReasonReact.Update({...state, loading: false, notifications})
+    | ReadNotification(id) => ReasonReact.SideEffects((self) => Js.Promise.(
+        Request.request("/notifications/" ++ id, ~method_=Fetch.Put)
+        |> then_((_) => resolve(self.reduce((_) => LoadNotifications, ()))))
+        |> ignore)
     };
 
 module Style = {
@@ -111,7 +117,7 @@ let make = (_children) => {
         self.reduce((_) => LoadNotifications, ());
         ReasonReact.NoUpdate
     },
-    render: ({state: {loading, notifications}}) =>
+    render: ({state: {loading, notifications}, reduce}) =>
         <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
@@ -132,7 +138,11 @@ let make = (_children) => {
                         text
                         color
                         icon
-                        task=(notification##task)
+                        onClick=((_) => reduce((_) => ReadNotification(notification##id), ()))
+                        read=(switch (Js.Nullable.to_opt(notification##readDate)) {
+                        | Some(_) => true
+                        | None => false
+                        })
                     />
                 })
                 |> ReasonReact.arrayToElement
