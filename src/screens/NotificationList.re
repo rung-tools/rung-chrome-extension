@@ -125,7 +125,7 @@ let handleClickNotification = (notification) =>
             |> Js.Array.joinWith(";")
             |> openTab("n"))
         |> ignore
-    | "permissions-updated" | "alerts-manually-deleted" | "alerts-deleted" => ()
+    | "permissions-updated" | "alert-manually-deleted" | "alerts-deleted" => ()
     | "alert-comment" | "alert-follow" | "alert-unfollow" | "task-created" =>
         notification##dispatcher >>= ([@bs] (dispatcher) => openTab("i", dispatcher))
         |> ignore
