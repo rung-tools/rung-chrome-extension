@@ -40,8 +40,13 @@ let reducer = (action, state) =>
                 let validNotifications = notifications
                 |> Js.Array.filter((notification) => String.lowercase(notification##_type) == notification##_type);
 
-                Chrome.(chrome##browserAction##setBadgeText(
-                    {"text": string_of_int(Array.length(validNotifications))}));
+                Chrome.(
+                    chrome##browserAction##setBadgeText({
+                        "text": validNotifications
+                        |> Js.Array.filter((notification) => Js.Nullable.test(notification##readDate))
+                        |> Array.length
+                        |> string_of_int
+                    }));
                 self.reduce((_) => SetNotifications(validNotifications), ())
             }
             |> resolve))
@@ -138,11 +143,12 @@ let make = (_children) => {
                         text
                         color
                         icon
-                        onClick=((_) => reduce((_) => ReadNotification(notification##id), ()))
-                        read=(switch (Js.Nullable.to_opt(notification##readDate)) {
-                        | Some(_) => true
-                        | None => false
+                        onClick=((_) => {
+                            if (Js.Nullable.test(notification##readDate)) {
+                                reduce((_) => ReadNotification(notification##id), ())
+                            }
                         })
+                        read=(!Js.Nullable.test(notification##readDate))
                     />
                 })
                 |> ReasonReact.arrayToElement
