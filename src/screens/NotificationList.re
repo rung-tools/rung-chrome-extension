@@ -6,7 +6,7 @@ type notification = {.
     "task": Js.Nullable.t(string),
     "readDate": Js.Nullable.t(string),
     "name": string,
-    "values": option(array(string))
+    "values": Js.Nullable.t(array(string))
 };
 
 type action =
@@ -83,7 +83,7 @@ let t = key => Chrome.(chrome##i18n##getMessage(key));
 let replace = Js.String.replace;
 
 let countAlerts = notification =>
-    switch (notification##values) {
+    switch (Js.Nullable.to_opt(notification##values)) {
     | Some(result) => Array.length(result)
     | None => 0
     };
