@@ -1,11 +1,11 @@
 {
     "appName": {
         "message": "Rung",
-        "description": "Extension name"
+        "description": "App name"
     },
     "appDesc": {
         "message": "Obtenir Rung notifications à tout moment!",
-        "description": "Description de l'extension"
+        "description": "Description de l'app"
     },
     "notifications": {
         "message": "Notifications",
@@ -48,39 +48,39 @@
         "description": "Erreur de connexion"
     },
     "alertsCreated": {
-        "message": "{{COUNT}} alerte(s) créées par {{APP}}",
-        "description": "Alertes créées"
+        "message": "{{COUNT}} carte(s) créées par {{APP}}",
+        "description": "Cartes créées"
     },
     "alertsUpdated": {
-        "message": "{{COUNT}} alerte(s) mise à jour par {{APP}}",
-        "description": "Alertes mise à jour"
+        "message": "{{COUNT}} carte(s) mise à jour par {{APP}}",
+        "description": "Cartes mise à jour"
     },
     "alertsDeleted": {
-        "message": "{{COUNT}} alerte(s) a été exclu de {{APP}}",
-        "description": "Alertes exclu"
+        "message": "{{COUNT}} carte(s) a été exclu de {{APP}}",
+        "description": "Cartes exclu"
     },
     "permissionsUpdated": {
         "message": "Vos autorisations ont été mis à jour",
         "description": "Mise à jour de les autorisations"
     },
     "taskCreated": {
-        "message": "Quelqu'un vous a attribué une tâche",
-        "description": "Tâche créée"
+        "message": "Quelqu'un vous a attribué une carte",
+        "description": "Carte créée"
     },
     "alertComment": {
-        "message": "Une alerte a reçu de nouveaux commentaires",
-        "description": "Alerte commentaire"
+        "message": "Une carte a reçu de nouveaux commentaires",
+        "description": "Carte commentaire"
     },
     "alertFollow": {
-        "message": "Une alerte a trouvé de nouveaux adeptes",
-        "description": "Alerte suivre"
+        "message": "Une carte a trouvé de nouveaux adeptes",
+        "description": "Carte suivre"
     },
     "alertUnfollow": {
-        "message": "Une alerte perdu adeptes",
-        "description": "Alerte perdu adepts"
+        "message": "Une carte perdu adeptes",
+        "description": "Carte perdu adepts"
     },
     "alertDeleted": {
-        "message": "Le alerte {{TITLE}} a été exclu",
-        "description": "Alerte exclu"
+        "message": "Le carte {{TITLE}} a été exclu",
+        "description": "Carte exclu"
     }
 }

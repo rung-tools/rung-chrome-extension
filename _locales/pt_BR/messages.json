@@ -1,11 +1,11 @@
 {
     "appName": {
         "message": "Rung",
-        "description": "Nome da extensão"
+        "description": "Nome do app"
     },
     "appDesc": {
         "message": "Receba as notificações do Rung a qualquer momento!",
-        "description": "Descrição da extensão"
+        "description": "Descrição do app"
     },
     "notifications": {
         "message": "Notificações",
@@ -48,39 +48,39 @@
         "description": "Erro ao entrar"
     },
     "alertsCreated": {
-        "message": "{{COUNT}} alerta(s) descobertos por {{APP}}",
-        "description": "Alertas criados"
+        "message": "{{COUNT}} cartão(s) descobertos por {{APP}}",
+        "description": "Cartões criados"
     },
     "alertsUpdated": {
-        "message": "{{COUNT}} alerta(s) atualizados por {{APP}}",
-        "description": "Alertas atualizados"
+        "message": "{{COUNT}} cartão(s) atualizados por {{APP}}",
+        "description": "Cartões atualizados"
     },
     "alertsDeleted": {
-        "message": "{{COUNT}} alerta(s) deletados de {{APP}}",
-        "description": "Alertas deletados"
+        "message": "{{COUNT}} cartão(s) deletados de {{APP}}",
+        "description": "Cartões deletados"
     },
     "permissionsUpdated": {
         "message": "Suas permissões foram atualizadas",
         "description": "Permissões atualizadas"
     },
     "taskCreated": {
-        "message": "Alguém lhe atribuiu uma tarefa",
-        "description": "Tarefa criada"
+        "message": "Alguém lhe atribuiu um cartão",
+        "description": "Cartão criado criada"
     },
     "alertComment": {
-        "message": "Um alerta recebeu novos comentários",
-        "description": "Comentário de alerta"
+        "message": "Um cartão recebeu novos comentários",
+        "description": "Comentário de cartão"
     },
     "alertFollow": {
-        "message": "Um alerta recebeu novos seguidores",
-        "description": "Seguindo alerta"
+        "message": "Um cartão recebeu novos seguidores",
+        "description": "Seguindo cartão"
     },
     "alertUnfollow": {
-        "message": "Um alerta perdeu seguidores",
-        "description": "Deixar de seguir alerta"
+        "message": "Um cartão perdeu seguidores",
+        "description": "Deixar de seguir cartão"
     },
     "alertDeleted": {
-        "message": "O alerta {{TITLE}} foi excluído",
-        "description": "Alerta excluído"
+        "message": "O cartão {{TITLE}} foi excluído",
+        "description": "Cartão excluído"
     }
 }
