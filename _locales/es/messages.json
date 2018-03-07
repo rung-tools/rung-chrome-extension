@@ -1,11 +1,11 @@
 {
     "appName": {
         "message": "Rung",
-        "description": "Nombre de la extensión"
+        "description": "Nombre de la app"
     },
     "appDesc": {
         "message": "Recibe las notificaciones del Rung en cualquier momento!",
-        "description": "Descri de la extensión"
+        "description": "Descri de la app"
     },
     "notifications": {
         "message": "Notificaciones",
@@ -48,39 +48,39 @@
         "description": "Erro al entrar"
     },
     "alertsCreated": {
-        "message": "{{COUNT}} alerta(s) descobiertos por {{APP}}",
-        "description": "Alertas creados"
+        "message": "{{COUNT}} tarjeta(s) descobiertos por {{APP}}",
+        "description": "Tarjetas creados"
     },
     "alertsUpdated": {
-        "message": "{{COUNT}} alerta(s) actualizados por {{APP}}",
-        "description": "Alertas actualizados"
+        "message": "{{COUNT}} tarjeta(s) actualizados por {{APP}}",
+        "description": "Tarjetas actualizados"
     },
     "alertsDeleted": {
-        "message": "{{COUNT}} alerta(s) borrados de {{APP}}",
-        "description": "Alertas borrados"
+        "message": "{{COUNT}} tarjeta(s) borrados de {{APP}}",
+        "description": "Tarjetas borrados"
     },
     "permissionsUpdated": {
         "message": "Suas permisos han sido actualizadas",
         "description": "Permisos actualizadas"
     },
     "taskCreated": {
-        "message": "Te han dejado una tarefa",
-        "description": "Tarefa creada"
+        "message": "Te han dejado una tarjeta",
+        "description": "Tarjeta creada"
     },
     "alertComment": {
-        "message": "Un alerta recebió nuevos conmentarios",
-        "description": "Conmentario de alerta"
+        "message": "Un tarjeta recebió nuevos conmentarios",
+        "description": "Conmentario de tarjeta"
     },
     "alertFollow": {
-        "message": "Un alerta lo gañó nuevos seguidores",
-        "description": "Seguiendo alerta"
+        "message": "Una tarjeta lo gañó nuevos seguidores",
+        "description": "Seguiendo tarjeta"
     },
     "alertUnfollow": {
-        "message": "Un alerta ha perdido algunos de los seguidores",
-        "description": "Dejar de seguir alerta"
+        "message": "Una tarjeta ha perdido algunos de los seguidores",
+        "description": "Dejar de seguir tarjeta"
     },
     "alertDeleted": {
-        "message": "Lo alerta {{TITLE}} ha sido borrado",
-        "description": "Alerta borrado"
+        "message": "La tarjeta {{TITLE}} ha sido borrado",
+        "description": "Tarjeta borrado"
     }
 }

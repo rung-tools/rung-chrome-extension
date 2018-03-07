@@ -1,11 +1,11 @@
 {
     "appName": {
         "message": "Rung",
-        "description": "Extension name"
+        "description": "App name"
     },
     "appDesc": {
         "message": "Get Rung notifications at any time!",
-        "description": "Extension description"
+        "description": "App description"
     },
     "notifications": {
         "message": "Notifications",
@@ -48,39 +48,39 @@
         "description": "Login error"
     },
     "alertsCreated": {
-        "message": "{{COUNT}} alert(s) discovered by {{APP}}",
-        "description": "Alerts created"
+        "message": "{{COUNT}} card(s) discovered by {{APP}}",
+        "description": "Cards created"
     },
     "alertsUpdated": {
-        "message": "{{COUNT}} alert(s) updated by {{APP}}",
-        "description": "Alerts updated"
+        "message": "{{COUNT}} card(s) updated by {{APP}}",
+        "description": "Cards updated"
     },
     "alertsDeleted": {
-        "message": "{{COUNT}} alert(s) deleted from {{APP}}",
-        "description": "Alerts deleted"
+        "message": "{{COUNT}} card(s) deleted from {{APP}}",
+        "description": "Cards deleted"
     },
     "permissionsUpdated": {
         "message": "Your permissions have been updated",
         "description": "Permissions updated"
     },
     "taskCreated": {
-        "message": "Somebody assigned you a task",
-        "description": "Task created"
+        "message": "Somebody assigned you a card",
+        "description": "Card created"
     },
     "alertComment": {
-        "message": "An alert received new comments",
-        "description": "Alert comment"
+        "message": "A card received new comments",
+        "description": "Card comment"
     },
     "alertFollow": {
-        "message": "An alert got new followers",
-        "description": "Alert follow"
+        "message": "A card got new followers",
+        "description": "Card follow"
     },
     "alertUnfollow": {
-        "message": "An alert got new unfollows",
-        "description": "Alert unfollow"
+        "message": "A card got new unfollows",
+        "description": "Card unfollow"
     },
     "alertDeleted": {
-        "message": "The alert {{TITLE}} was deleted",
-        "description": "Alert deleted"
+        "message": "The card {{TITLE}} was deleted",
+        "description": "Card deleted"
     }
 }
