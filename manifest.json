@@ -9,7 +9,7 @@
     "name": "__MSG_appName__",
     "short_name": "__MSG_appName__",
     "description": "__MSG_appDesc__",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "author": "Rung <developer@rung.com.br>",
     "default_locale": "en",
     "icons": {

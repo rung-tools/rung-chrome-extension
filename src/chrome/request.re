@@ -1,14 +1,14 @@
-let request = (path) => Js.Promise.(
+let request = (~method_=Fetch.Get, path) => Js.Promise.(
     Fetch.fetchWithInit(
-        "http://app.rung.com.br/api" ++ path,
-        Fetch.RequestInit.make(~credentials=Include, ()))
+        "https://app.rung.com.br/api" ++ path,
+        Fetch.RequestInit.make(~credentials=Include, ~method_, ()))
     |> then_((response) => Fetch.Response.ok(response)
         ? Fetch.Response.text(response)
         : Js.Exn.raiseError("")));
 
 let login = (email, password) => Js.Promise.(
     Fetch.fetchWithInit(
-        "http://app.rung.com.br/api/login/",
+        "https://app.rung.com.br/api/login/",
         Fetch.RequestInit.make(
             ~credentials=Include,
             ~headers=Fetch.HeadersInit.make({"content-type": "application/json"}),
