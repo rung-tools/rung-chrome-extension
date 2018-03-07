@@ -65,7 +65,7 @@
     },
     "taskCreated": {
         "message": "Alguém lhe atribuiu um cartão",
-        "description": "Cartão criado criada"
+        "description": "Cartão criado"
     },
     "alertComment": {
         "message": "Um cartão recebeu novos comentários",
