@@ -64,7 +64,13 @@ query($first: Int, $after: String) {
 let reducer = (action, state) =>
     switch action {
     | LoadNotifications => ReasonReact.SideEffects((self) => {
-        let notificationsQuery = NotificationsQuery.make(~first=5, ());
+        let open Js.Promise;
+        let notifications = Request.sendQuery(NotificationsQuery.make(~first=5, ()))
+        |> then_((response) => {
+            resolve(Js.log(response));
+        });
+
+
 
 
         Js.Promise.(
