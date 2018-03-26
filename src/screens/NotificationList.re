@@ -32,7 +32,7 @@ let initialState = () => {
 };
 
 module NotificationsQuery = [%graphql {|
-{
+query($first: Int, $after: String) {
     notifications(first: $first, after: $after) {
         totalUnread
         edges {
@@ -63,7 +63,11 @@ module NotificationsQuery = [%graphql {|
 
 let reducer = (action, state) =>
     switch action {
-    | LoadNotifications => ReasonReact.SideEffects((self) => Js.Promise.(
+    | LoadNotifications => ReasonReact.SideEffects((self) => {
+        let notificationsQuery = NotificationsQuery.make(~first=5, ());
+
+
+        Js.Promise.(
         Request.request("/notifications")
         |> then_((result) => parseNotifications(result)
             |> (notifications) => {
@@ -80,7 +84,9 @@ let reducer = (action, state) =>
                 self.reduce((_) => SetNotifications(validNotifications), ())
             }
             |> resolve))
-        |> ignore)
+        |> ignore
+
+        })
     | SetNotifications(notifications) => ReasonReact.Update({...state, loading: false, notifications})
     | ReadNotification(id) => ReasonReact.SideEffects((self) => Js.Promise.(
         Request.request("/notifications/" ++ id, ~method_=Fetch.Put)

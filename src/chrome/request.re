@@ -1,3 +1,34 @@
+exception Graphql_error(string);
+
+let sendQuery = (q) => {
+    let open Js.Promise;
+    let open Fetch;
+    let body = [("query", Js.Json.string(q##query)), ("variables", q##variables)]
+    |> Js.Dict.fromList
+    |> Js.Json.object_
+    |> Js.Json.stringify
+    |> BodyInit.make;
+    fetchWithInit(
+        "https://app.rung.com.br/api/graphql",
+        RequestInit.make(
+            ~credentials=Include,
+            ~headers=HeadersInit.make({"content-type": "application/json"}),
+            ~body, ()))
+
+    |> then_((response) =>
+        switch (Response.ok(response)) {
+        | true =>
+            Response.json(response)
+            |> then_((data) =>
+                switch (Js.Json.decodeObject(data)) {
+                | Some(obj) => resolve(q##parse(Js.Dict.unsafeGet(obj, "data")))
+                | None => reject(Graphql_error("Response is not an object"))
+                })
+        | false =>
+            reject(Graphql_error("Request failed: " ++ Response.statusText(response)))
+        })
+};
+
 let request = (~method_=Fetch.Get, path) => Js.Promise.(
     Fetch.fetchWithInit(
         "https://app.rung.com.br/api" ++ path,
