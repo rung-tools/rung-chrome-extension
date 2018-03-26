@@ -9,13 +9,12 @@ let sendQuery = (q) => {
     |> Js.Json.stringify
     |> BodyInit.make;
     fetchWithInit(
-        "https://app.rung.com.br/api/graphql",
+        "http://app.rung.plutao/api/graphql",
         RequestInit.make(
             ~credentials=Include,
             ~method_=Post,
             ~headers=HeadersInit.make({"content-type": "application/json"}),
             ~body, ()))
-
     |> then_((response) =>
         switch (Response.ok(response)) {
         | true =>
