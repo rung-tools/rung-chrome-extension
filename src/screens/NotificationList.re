@@ -31,6 +31,36 @@ let initialState = () => {
     boxRef: ref(None)
 };
 
+module NotificationsQuery = [%graphql {|
+{
+    notifications(first: $first, after: $after) {
+        totalUnread
+        edges {
+            cursor
+            node {
+                id
+                type
+                text
+                fields {
+                    count
+                    app
+                    responsible
+                    card
+                    comment
+                    followers
+                }
+                read
+                date
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+    }
+}
+|}];
+
 let reducer = (action, state) =>
     switch action {
     | LoadNotifications => ReasonReact.SideEffects((self) => Js.Promise.(
