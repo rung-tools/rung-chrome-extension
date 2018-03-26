@@ -20,9 +20,6 @@ type state = {
     boxRef: ref(option(Dom.element))
 };
 
-[@bs.val]
-external parseNotifications : string => array(notification) = "JSON.parse";
-
 let component = ReasonReact.reducerComponent("NotificationList");
 
 let initialState = () => {
@@ -72,16 +69,10 @@ let reducer = (action, state) =>
             resolve(());
         });
         Js.log(notifications);
+        ()
 
 
-
-
-        Request.request("/notifications")
-        |> then_((result) => parseNotifications(result)
-            |> (notifications) => {
-                let validNotifications = notifications
-                |> Js.Array.filter((notification) => String.lowercase(notification##_type) == notification##_type);
-
+        /*
                 Chrome.(
                     chrome##browserAction##setBadgeText({
                         "text": validNotifications
@@ -90,10 +81,7 @@ let reducer = (action, state) =>
                         |> string_of_int
                     }));
                 self.reduce((_) => SetNotifications(validNotifications), ())
-            }
-            |> resolve)
-        |> ignore
-
+            } */
         })
     | SetNotifications(notifications) => ReasonReact.Update({...state, loading: false, notifications})
     | ReadNotification(id) => ReasonReact.SideEffects((self) => Js.Promise.(
