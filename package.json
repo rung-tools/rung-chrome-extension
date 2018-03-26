@@ -16,7 +16,8 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "webpack": "webpack -w",
-    "release": "rm -rf public && webpack -p && zip -r rung.zip public"
+    "release": "rm -rf public && webpack -p && zip -r rung.zip public",
+    "graphql:update": "yarn send-instrospection-query https://app.rung.com.br/api/graphql"
   },
   "keywords": [
     "BuckleScript"
@@ -31,6 +32,7 @@
   "devDependencies": {
     "bs-platform": "^2.1.0",
     "copy-webpack-plugin": "4.3.1",
+    "graphql_ppx": "^0.2.1",
     "webpack": "3.8.1"
   }
 }
