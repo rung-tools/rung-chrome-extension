@@ -65,15 +65,17 @@ let reducer = (action, state) =>
     switch action {
     | LoadNotifications => ReasonReact.SideEffects((self) => {
         let open Js.Promise;
-        let notifications = Request.sendQuery(NotificationsQuery.make(~first=5, ()))
+        let query = NotificationsQuery.make(~first=5, ());
+        let notifications = Request.sendQuery(query)
         |> then_((response) => {
-            resolve(Js.log(response));
+            Js.log(response);
+            resolve(());
         });
+        Js.log(notifications);
 
 
 
 
-        Js.Promise.(
         Request.request("/notifications")
         |> then_((result) => parseNotifications(result)
             |> (notifications) => {
@@ -89,7 +91,7 @@ let reducer = (action, state) =>
                     }));
                 self.reduce((_) => SetNotifications(validNotifications), ())
             }
-            |> resolve))
+            |> resolve)
         |> ignore
 
         })

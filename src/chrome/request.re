@@ -12,6 +12,7 @@ let sendQuery = (q) => {
         "https://app.rung.com.br/api/graphql",
         RequestInit.make(
             ~credentials=Include,
+            ~method_=Post,
             ~headers=HeadersInit.make({"content-type": "application/json"}),
             ~body, ()))
 
@@ -21,7 +22,7 @@ let sendQuery = (q) => {
             Response.json(response)
             |> then_((data) =>
                 switch (Js.Json.decodeObject(data)) {
-                | Some(obj) => resolve(q##parse(Js.Dict.unsafeGet(obj, "data")))
+                | Some(obj) => resolve(Js.Dict.unsafeGet(obj, "data"))
                 | None => reject(Graphql_error("Response is not an object"))
                 })
         | false =>
