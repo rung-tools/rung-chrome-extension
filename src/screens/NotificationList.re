@@ -61,7 +61,7 @@ query($first: Int, $after: String) {
 /**
  * TODO
  * - [x] Request and parse GraphQL data
- * - [ ] Set badge text with the unread notifications
+ * - [x] Set badge text with the unread notifications
  * - [ ] Create type for the new state
  * - [ ] Update the state
  */
@@ -70,26 +70,14 @@ let reducer = (action, state) =>
     | LoadNotifications => ReasonReact.SideEffects((self) => {
         let open Js.Promise;
         let query = NotificationsQuery.make(~first=5, ());
-        let notifications = Request.sendQuery(query)
+        Request.sendQuery(query)
         |> then_((response) => {
             let unread = response##notifications##totalUnread;
-
+            Chrome.chrome##browserAction##setBadgeText({ "text": string_of_int(unread) });
             resolve(());
-        });
-        ()
-
-
-        /*
-                Chrome.(
-                    chrome##browserAction##setBadgeText({
-                        "text": validNotifications
-                        |> Js.Array.filter((notification) => Js.Nullable.test(notification##readDate))
-                        |> Array.length
-                        |> string_of_int
-                    }));
-                self.reduce((_) => SetNotifications(validNotifications), ())
-            } */
         })
+        |> ignore
+    })
     | SetNotifications(notifications) => ReasonReact.Update({...state, loading: false, notifications})
     | ReadNotification(id) => ReasonReact.SideEffects((self) => Js.Promise.(
         Request.request("/notifications/" ++ id, ~method_=Fetch.Put)
