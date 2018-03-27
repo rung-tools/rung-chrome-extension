@@ -58,6 +58,13 @@ query($first: Int, $after: String) {
 }
 |}];
 
+/**
+ * TODO
+ * - [x] Request and parse GraphQL data
+ * - [ ] Set badge text with the unread notifications
+ * - [ ] Create type for the new state
+ * - [ ] Update the state
+ */
 let reducer = (action, state) =>
     switch action {
     | LoadNotifications => ReasonReact.SideEffects((self) => {
@@ -65,10 +72,10 @@ let reducer = (action, state) =>
         let query = NotificationsQuery.make(~first=5, ());
         let notifications = Request.sendQuery(query)
         |> then_((response) => {
-            Js.log(response);
+            let unread = response##notifications##totalUnread;
+
             resolve(());
         });
-        Js.log(notifications);
         ()
 
 
