@@ -1,32 +1,54 @@
-type notification = {.
-    "id": string,
-    "dispatcher": Js.Nullable.t(string),
-    "_type": string,
-    "date": string,
-    "task": Js.Nullable.t(string),
-    "readDate": Js.Nullable.t(string),
-    "name": string,
-    "values": Js.Nullable.t(array(string))
+type notifications = {.
+    "totalUnread": int,
+    "edges": array({.
+        "cursor": string,
+        "node": {.
+            "id": string,
+            "type_": string,
+            "text": string,
+            "fields": {.
+                "app": option(string),
+                "card": option(string),
+                "comment": option(string),
+                "count": option(int),
+                "followers": option(array(string)),
+                "responsible": option(string)
+            },
+            "read": Js.boolean,
+            "date": string
+        }
+    }),
+    "pageInfo": {.
+        "endCursor": option(string),
+        "hasNextPage": Js.boolean
+    }
 };
 
-type action =
-    | LoadNotifications
-    | SetNotifications(array(notification))
-    | ReadNotification(string);
-
 type state = {
-    notifications: array(notification),
+    notifications: notifications,
     loading: bool,
     boxRef: ref(option(Dom.element))
 };
 
-let component = ReasonReact.reducerComponent("NotificationList");
-
 let initialState = () => {
-    notifications: [||],
+    notifications: {
+        "totalUnread": 0,
+        "edges": [||],
+        "pageInfo": {
+            "endCursor": None,
+            "hasNextPage": Js.false_
+        }
+    },
     loading: true,
     boxRef: ref(None)
 };
+
+type action('a) =
+    | LoadNotifications
+    | NotificationsLoaded('a)
+    | ReadNotification(string);
+
+let component = ReasonReact.reducerComponent("NotificationList");
 
 module NotificationsQuery = [%graphql {|
 query($first: Int, $after: String) {
@@ -36,7 +58,7 @@ query($first: Int, $after: String) {
             cursor
             node {
                 id
-                type
+                type_: type
                 text
                 fields {
                     count
@@ -58,27 +80,16 @@ query($first: Int, $after: String) {
 }
 |}];
 
-/**
- * TODO
- * - [x] Request and parse GraphQL data
- * - [x] Set badge text with the unread notifications
- * - [ ] Create type for the new state
- * - [ ] Update the state
- */
 let reducer = (action, state) =>
     switch action {
     | LoadNotifications => ReasonReact.SideEffects((self) => {
         let open Js.Promise;
         let query = NotificationsQuery.make(~first=5, ());
         Request.sendQuery(query)
-        |> then_((response) => {
-            let unread = response##notifications##totalUnread;
-            Chrome.chrome##browserAction##setBadgeText({ "text": string_of_int(unread) });
-            resolve(());
-        })
+        |> then_((response) => resolve(self.reduce((_) => NotificationsLoaded(response##notifications), ())))
         |> ignore
     })
-    | SetNotifications(notifications) => ReasonReact.Update({...state, loading: false, notifications})
+    | NotificationsLoaded(notifications) => ReasonReact.Update({...state, loading: false, notifications})
     | ReadNotification(id) => ReasonReact.SideEffects((self) => Js.Promise.(
         Request.request("/notifications/" ++ id, ~method_=Fetch.Put)
         |> then_((_) => resolve(self.reduce((_) => LoadNotifications, ()))))
@@ -106,106 +117,45 @@ module Style = {
 };
 
 let t = key => Chrome.(chrome##i18n##getMessage(key));
-
-let replace = Js.String.replace;
-
-let countAlerts = notification =>
-    switch (Js.Nullable.to_opt(notification##values)) {
-    | Some(result) => Array.length(result)
-    | None => 0
-    };
-
-let getNotificationStyles = (notification) =>
-    switch (notification##_type) {
-    | "alerts-created" => ("list", "green",
-        t("alertsCreated")
-        |> replace("{{COUNT}}", string_of_int(countAlerts(notification)))
-        |> replace("{{APP}}", notification##name))
-    | "alerts-updated" => ("system_update_alt", "teal",
-        t("alertsUpdated")
-        |> replace("{{COUNT}}", string_of_int(countAlerts(notification)))
-        |> replace("{{APP}}", notification##name))
-    | "alerts-deleted" => ("delete", "red",
-        t("alertsDeleted")
-        |> replace("{{COUNT}}", string_of_int(countAlerts(notification)))
-        |> replace("{{APP}}", notification##name))
-    | "permissions-updated" => ("security", "pink", t("permissionsUpdated"))
-    | "task-created" => ("warning", "red", t("taskCreated"))
-    | "alert-comment" => ("comment", "indigo", t("alertComment"))
-    | "alert-follow" => ("people", "brown", t("alertFollow"))
-    | "alert-unfollow" => ("do_not_disturb", "red", t("alertUnfollow"))
-    | "alert-manually-deleted" => ("delete_forever", "red",
-        t("alertDeleted")
-        |> replace("{{TITLE}}", notification##name))
-    | _ => ("alarm", "red", "")
-    };
-
-let (>>=) = Js.Nullable.bind;
-
-let openTab = (kind, suffix) =>
-    Chrome.(chrome##tabs##create({"url": "https://app.rung.com.br/" ++ kind ++ "/" ++ suffix}));
-
-let handleClickNotification = (notification) =>
-    switch (notification##_type) {
-    | "alerts-created" | "alerts-updated" =>
-        notification##values >>= ([@bs] (values) => values
-            |> Js.Array.joinWith(";")
-            |> openTab("n"))
-        |> ignore
-    | "permissions-updated" | "alert-manually-deleted" | "alerts-deleted" => ()
-    | "alert-comment" | "alert-follow" | "alert-unfollow" | "task-created" =>
-        notification##dispatcher >>= ([@bs] (dispatcher) => openTab("i", dispatcher))
-        |> ignore
-    | _ =>
-        notification##task >>= ([@bs] (task) => openTab("i", task))
-        |> ignore
-    };
-
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
     ...component,
     initialState,
     reducer,
+    didUpdate: ({oldSelf, newSelf}) => {
+        let totalUnread = newSelf.state.notifications##totalUnread;
+        if (oldSelf.state.notifications##totalUnread != totalUnread) {
+            Chrome.chrome##browserAction##setBadgeText({"text": string_of_int(totalUnread)})
+        }
+    },
     didMount: (self) => {
         self.reduce((_) => LoadNotifications, ());
         ReasonReact.NoUpdate
     },
-    render: ({state: {loading, notifications}, handle, reduce}) =>
+    render: ({state: {loading, notifications}}) =>
         <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
             </div>
             <LinearLoading loading />
-            <div
-                className="custom-scrollbar"
-                style=(Style.notifications)>
+            <div className="custom-scrollbar" style=(Style.notifications)>
             {
-                switch (Array.length(notifications), loading) {
+                switch (Array.length(notifications##edges), loading) {
                 | (0, false) => <div style=(Style.nothing)>(show(t("nothing")))</div>
-                | _ => notifications
-                |> Js.Array.map(notification => {
-                    let (icon, color, text) = getNotificationStyles(notification);
-
+                | _ => notifications##edges
+                |> Js.Array.map((edge) => {
                     <Notification
-                        key=(notification##id)
-                        text
-                        color
-                        icon
-                        onClick=((_) => {
-                            if (Js.Nullable.test(notification##readDate)) {
-                                reduce((_) => ReadNotification(notification##id), ())
-                            };
-
-                            handle((_event, _self) => handleClickNotification(notification), ())
-                        })
-                        date=(notification##date)
-                        read=(!Js.Nullable.test(notification##readDate))
+                        key=edge##cursor
+                        type_=edge##node##type_
+                        text=edge##node##text
+                        read=Js.to_bool(edge##node##read)
+                        date=edge##node##date
+                        fields=edge##node##fields
                     />
                 })
-                |> ReasonReact.arrayToElement
                 |> (elements) =>
                     <ul className="collection">
-                        (elements)
+                        (ReasonReact.arrayToElement(elements))
                     </ul>
                 }
             }
