@@ -89,16 +89,7 @@ let reducer = (action, state) =>
         let open Js.Promise;
         let query = NotificationsQuery.make(~first=100, ~after=?after, ());
         Request.sendQuery(query)
-        |> then_((response) => {
-            let oldEdges = self.state.notifications##edges;
-            let newEdges = response##notifications##edges;
-            let state = {
-                "totalUnread": response##notifications##totalUnread,
-                "pageInfo": response##notifications##pageInfo,
-                "edges": Js.Array.concat(oldEdges, newEdges)
-            };
-            resolve(self.reduce((_) => NotificationsLoaded(state), ()))
-        })
+        |> then_((response) => resolve(self.reduce((_) => NotificationsLoaded(response##notifications))))
         |> ignore
     })
     | NotificationsLoaded(notifications) => ReasonReact.Update({...state, loading: false, notifications})
