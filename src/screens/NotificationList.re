@@ -27,7 +27,7 @@ type notifications = {.
 type state = {
     notifications: notifications,
     loading: bool,
-    boxRef: ref(option(Dom.element))
+    scrollboxRef: ref(option(Dom.element))
 };
 
 let initialState = () => {
@@ -40,15 +40,18 @@ let initialState = () => {
         }
     },
     loading: true,
-    boxRef: ref(None)
+    scrollboxRef: ref(None)
 };
 
 type action('a) =
-    | LoadNotifications
+    | LoadNotifications(option(string))
     | NotificationsLoaded('a)
     | ReadNotification(string);
 
 let component = ReasonReact.reducerComponent("NotificationList");
+
+let setScrollboxRef = (reference, {ReasonReact.state}) =>
+    state.scrollboxRef := Js.Nullable.to_opt(reference);
 
 module NotificationsQuery = [%graphql {|
 query($first: Int, $after: String) {
@@ -82,17 +85,26 @@ query($first: Int, $after: String) {
 
 let reducer = (action, state) =>
     switch action {
-    | LoadNotifications => ReasonReact.SideEffects((self) => {
+    | LoadNotifications(after) => ReasonReact.SideEffects((self) => {
         let open Js.Promise;
-        let query = NotificationsQuery.make(~first=5, ());
+        let query = NotificationsQuery.make(~first=100, ~after=?after, ());
         Request.sendQuery(query)
-        |> then_((response) => resolve(self.reduce((_) => NotificationsLoaded(response##notifications), ())))
+        |> then_((response) => {
+            let oldEdges = self.state.notifications##edges;
+            let newEdges = response##notifications##edges;
+            let state = {
+                "totalUnread": response##notifications##totalUnread,
+                "pageInfo": response##notifications##pageInfo,
+                "edges": Js.Array.concat(oldEdges, newEdges)
+            };
+            resolve(self.reduce((_) => NotificationsLoaded(state), ()))
+        })
         |> ignore
     })
     | NotificationsLoaded(notifications) => ReasonReact.Update({...state, loading: false, notifications})
     | ReadNotification(id) => ReasonReact.SideEffects((self) => Js.Promise.(
         Request.request("/notifications/" ++ id, ~method_=Fetch.Put)
-        |> then_((_) => resolve(self.reduce((_) => LoadNotifications, ()))))
+        |> then_((_) => resolve(self.reduce((_) => LoadNotifications(None), ()))))
         |> ignore)
     };
 
@@ -116,6 +128,14 @@ module Style = {
         ~color="rgba(0, 0, 0, 0.54)", ())
 };
 
+let handleScroll = (event, self) => {
+    let scrollbox = ReactDOMRe.domElementToObj(ReactEventRe.Form.target(event));
+    if (scrollbox##scrollHeight - scrollbox##offsetHeight - scrollbox##scrollTop < 1
+        && Js.to_bool(self.ReasonReact.state.notifications##pageInfo##hasNextPage)) {
+        self.reduce((_) => LoadNotifications(self.ReasonReact.state.notifications##pageInfo##endCursor), ())
+    }
+};
+
 let t = key => Chrome.(chrome##i18n##getMessage(key));
 let show = ReasonReact.stringToElement;
 let make = (_children) => {
@@ -129,16 +149,26 @@ let make = (_children) => {
         }
     },
     didMount: (self) => {
-        self.reduce((_) => LoadNotifications, ());
+        self.reduce((_) => LoadNotifications(None), ());
+        /* TODO: Handle scroll for pagination
+        switch (self.state.scrollboxRef^) {
+        | Some(box) => {
+               ReactDOMRe.domElementToObj(box)##addEventListener("scroll", self.handle(handleScroll))
+        }
+        | None => ()
+        }; */
         ReasonReact.NoUpdate
     },
-    render: ({state: {loading, notifications}}) =>
+    render: ({handle, state: {loading, notifications}}) =>
         <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
             </div>
             <LinearLoading loading />
-            <div className="custom-scrollbar" style=(Style.notifications)>
+            <div
+                className="custom-scrollbar"
+                ref=(handle(setScrollboxRef))
+                style=(Style.notifications)>
             {
                 switch (Array.length(notifications##edges), loading) {
                 | (0, false) => <div style=(Style.nothing)>(show(t("nothing")))</div>
