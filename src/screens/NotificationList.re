@@ -89,7 +89,7 @@ let reducer = (action, state) =>
         let open Js.Promise;
         let query = NotificationsQuery.make(~first=100, ~after=?after, ());
         Request.sendQuery(query)
-        |> then_((response) => resolve(self.reduce((_) => NotificationsLoaded(response##notifications))))
+        |> then_((response) => resolve(self.reduce((_) => NotificationsLoaded(response##notifications), ())))
         |> ignore
     })
     | NotificationsLoaded(notifications) => ReasonReact.Update({...state, loading: false, notifications})
@@ -150,7 +150,7 @@ let make = (_children) => {
         }; */
         ReasonReact.NoUpdate
     },
-    render: ({handle, state: {loading, notifications}}) =>
+    render: ({handle, reduce, state: {loading, notifications}}) =>
         <div style=(Style.container)>
             <div style=(Style.header)>
                 (show(t("notifications")))
@@ -166,6 +166,7 @@ let make = (_children) => {
                 | _ => notifications##edges
                 |> Js.Array.map((edge) => {
                     <Notification
+                        onClick=((_event) => reduce((_) => ReadNotification(edge##node##id), ()))
                         key=edge##cursor
                         type_=edge##node##type_
                         text=edge##node##text
