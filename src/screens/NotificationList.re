@@ -15,7 +15,8 @@ type notifications = {.
                 "responsible": option(string)
             },
             "read": Js.boolean,
-            "date": string
+            "date": string,
+            "url": option(string)
         }
     }),
     "pageInfo": {.
@@ -73,6 +74,7 @@ query($first: Int, $after: String) {
                 }
                 read
                 date
+                url
             }
         }
         pageInfo {
@@ -173,6 +175,7 @@ let make = (_children) => {
                         read=Js.to_bool(edge##node##read)
                         date=edge##node##date
                         fields=edge##node##fields
+                        url=?edge##node##url
                     />
                 })
                 |> (elements) =>

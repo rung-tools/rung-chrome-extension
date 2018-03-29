@@ -1,6 +1,7 @@
 exception Graphql_error(string);
 
-let endpoint = "http://app.rung.plutao/api";
+let endpoint = "http://localhost/api";
+let client = "http://localhost/";
 
 let sendQuery = (q) => {
     let open Js.Promise;

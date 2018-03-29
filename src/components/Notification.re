@@ -48,14 +48,24 @@ let styles = (type_) =>
     | _                        => ("alarm", "red")
     };
 
-let make = (~type_, ~text, ~onClick=?, ~read, ~date, ~fields, _children) => {
+let click = (onClick, url, event, _self) => {
+    onClick(event);
+    switch url {
+    | Some(path) => Chrome.chrome##tabs##create({"url": Request.client ++ path })
+    | None => ()
+    }
+};
+
+let make = (~type_, ~text, ~onClick, ~read, ~date, ~fields, ~url=?, _children) => {
     ...component,
-    render: (_self) => {
+    render: ({handle}) => {
         let (icon, color) = styles(type_);
         let humanText = text
         |> format(fields)
         |> ReasonReact.stringToElement;
-        <li className=("collection-item avatar notification " ++ (read ? "" : "unread")) onClick=?onClick>
+        <li
+            className=("collection-item avatar notification " ++ (read ? "" : "unread"))
+            onClick=handle(click(onClick, url))>
             <i className=("material-icons circle " ++ color)>(ReasonReact.stringToElement(icon))</i>
             <h6>(humanText)</h6>
             <p>(ReasonReact.stringToElement(DateFns.distanceInWordsToNow(now(date))))</p>
