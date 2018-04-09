@@ -20,6 +20,7 @@ const assetsPlugin = new CopyWebpackPlugin([
     { from: '_locales', to: locales },
     { from: 'assets/html/index.html', to: public },
     { from: 'assets/css/styles.css', to: public },
+    { from: 'assets/js/intercom.js', to: public },
     { from: 'assets/images/rung-full.png', to: resources },
     { from: 'assets/images/rung.png', to: resources },
     { from: 'assets/images/rung16.png', to: resources },
