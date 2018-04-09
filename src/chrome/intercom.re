@@ -1,9 +1,3 @@
-type event =
-    | Login
-    | OpenPopup
-    | ClosePopup
-    | ClickNotification;
-
 [@bs.val]
 external appId : string = "APP_ID";
 
