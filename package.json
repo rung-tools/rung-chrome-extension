@@ -16,7 +16,8 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "webpack": "webpack -w",
-    "release": "rm -rf public && webpack -p && zip -r rung.zip public",
+    "webpack:release": "webpack -p",
+    "release": "bash ./release.sh",
     "graphql:update": "yarn send-instrospection-query https://app.rung.com.br/api/graphql"
   },
   "keywords": [
