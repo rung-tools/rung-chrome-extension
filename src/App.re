@@ -11,10 +11,10 @@ module Top = {
 
     type state = {screen: screen};
 
-    type user = {."name": string};
+    type user = {."name": string, "email": string};
 
     [@bs.val]
-    external parseUser : string => option(user) = "JSON.parse";
+    external parseUser : string => user = "JSON.parse";
 
     let component = ReasonReact.reducerComponent("Top");
 
@@ -23,8 +23,16 @@ module Top = {
         | CheckAuthentication => ReasonReact.SideEffects((self) => Js.Promise.(
             Request.request("/whoami")
             |> then_((text) => {
+                let user = parseUser(text);
                 self.reduce((_) => GoToNotifications, ());
-                resolve(Some(parseUser(text)))
+                Intercom.boot({
+                    "app_id": Intercom.appId,
+                    "email": user##email,
+                    "name": user##name,
+                    "created_at": Js.Date.make()
+                });
+                Intercom.track("opened chrome notification popup");
+                resolve(Some(user))
             })
             |> catch((_err) => {
                 self.reduce((_) => GoToLogin, ());
