@@ -79,6 +79,11 @@ let handleSubmit = (_event, {ReasonReact.state, ReasonReact.reduce, ReasonReact.
         login(state.email, state.password)
         |> then_((_result) => {
             reduce((_) => SetLoginSuccess, ());
+            Intercom.boot({
+                "app_id": Intercom.appId,
+                "email": state.email
+            });
+            Intercom.track("authenticated inside chrome extension");
             retainedProps.onSuccess()
             |> resolve
         })

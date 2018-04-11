@@ -95,10 +95,13 @@ let reducer = (action, state) =>
         |> ignore
     })
     | NotificationsLoaded(notifications) => ReasonReact.Update({...state, loading: false, notifications})
-    | ReadNotification(id) => ReasonReact.SideEffects((self) => Js.Promise.(
+    | ReadNotification(id) => ReasonReact.SideEffects((self) => {
+        let open Js.Promise;
+        Intercom.track("read notification in chrome extension");
         Request.request("/notifications/" ++ id, ~method_=Fetch.Put)
-        |> then_((_) => resolve(self.reduce((_) => LoadNotifications(None), ()))))
-        |> ignore)
+        |> then_((_) => resolve(self.reduce((_) => LoadNotifications(None), ())))
+        |> ignore
+    })
     };
 
 module Style = {
